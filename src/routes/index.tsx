@@ -72,21 +72,48 @@ function Index() {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.setAttribute("fetchpriority", "high");
-    video.preload = "auto";
 
-    const onCanPlayThrough = () => {
-      setTimeout(() => {
+    let objectUrl = "";
+    let isCancelled = false;
+
+    const loadVideo = async () => {
+      try {
+        // Fetch the entire video as a blob so it plays and scrubs perfectly
+        // This guarantees the loading screen stays until 100% downloaded
+        const response = await fetch(HERO_VIDEO_URL);
+        const blob = await response.blob();
+        if (isCancelled) return;
+
+        objectUrl = URL.createObjectURL(blob);
+        video.src = objectUrl;
+
+        const onReady = () => {
+          setTimeout(() => {
+            setLoaderExiting(true);
+            setTimeout(() => setVideoReady(true), 800);
+          }, 300);
+        };
+
+        if (video.readyState >= 4) { onReady(); }
+        else { video.addEventListener("canplaythrough", onReady, { once: true }); }
+        
+        video.load();
+      } catch (error) {
+        console.error("Video load error:", error);
+        // Fallback to direct URL streaming if fetch fails
+        if (isCancelled) return;
+        video.src = HERO_VIDEO_URL;
         setLoaderExiting(true);
         setTimeout(() => setVideoReady(true), 800);
-      }, 300);
+      }
     };
 
-    if (video.readyState >= 4) { onCanPlayThrough(); }
-    else { video.addEventListener("canplaythrough", onCanPlayThrough, { once: true }); }
-    video.load();
+    loadVideo();
 
-    return () => { video.removeEventListener("canplaythrough", onCanPlayThrough); };
+    return () => {
+      isCancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
   }, []);
 
   // ─── GSAP Scroll Animations ────────────────────────────────────────
@@ -275,7 +302,6 @@ function Index() {
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover object-center [backface-visibility:hidden] [transform:translateZ(0)]"
-            src={HERO_VIDEO_URL}
             muted playsInline preload="auto"
             fetchPriority="high"
           />
