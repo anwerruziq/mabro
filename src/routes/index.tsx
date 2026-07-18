@@ -183,32 +183,43 @@ function Index() {
     }
 
     // 5. Throttled Video Scrubbing (Fixes heavy browser lag)
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    
     if (video && heroRef.current) {
-      video.pause();
-      
-      let targetTime = 0;
-      let lastUpdateTime = 0;
+      if (isMobile) {
+        // Mobile fallback: Hardware decoding can't handle scrubbing
+        // Just play it smoothly in the background at half speed
+        video.playbackRate = 0.6;
+        video.loop = true;
+        video.play().catch(console.error);
+      } else {
+        // Desktop: High performance scrubbing
+        video.pause();
+        
+        let targetTime = 0;
+        let lastUpdateTime = 0;
 
-      ScrollTrigger.create({
-        trigger: heroRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-        onUpdate: (self) => {
-          if (!Number.isNaN(video.duration) && video.duration > 0) {
-            targetTime = self.progress * (video.duration - 0.05);
-            const now = Date.now();
-            
-            // Throttle to 250ms (4 FPS) to completely eliminate CPU spikes
-            if (now - lastUpdateTime > 250 && Math.abs(video.currentTime - targetTime) > 0.05) {
-              requestAnimationFrame(() => {
-                if (video) video.currentTime = targetTime;
-              });
-              lastUpdateTime = now;
+        ScrollTrigger.create({
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+          onUpdate: (self) => {
+            if (!Number.isNaN(video.duration) && video.duration > 0) {
+              targetTime = self.progress * (video.duration - 0.05);
+              const now = Date.now();
+              
+              // Throttle to 200ms (5 FPS) to eliminate CPU spikes
+              if (now - lastUpdateTime > 200 && Math.abs(video.currentTime - targetTime) > 0.05) {
+                requestAnimationFrame(() => {
+                  if (video) video.currentTime = targetTime;
+                });
+                lastUpdateTime = now;
+              }
             }
           }
-        }
-      });
+        });
+      }
     }
   });
 
