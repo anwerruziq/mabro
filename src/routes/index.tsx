@@ -235,63 +235,57 @@ function Index() {
         }
       });
 
-      // 5. Intro headline — dust scatter on scroll
-      if (textRef.current) {
-        const headline = textRef.current;
-        // Start with gather animation (already applied via CSS class in JSX)
-        ScrollTrigger.create({
-          trigger: heroRef.current,
-          start: 'top top',
-          end: `${(65 / frameCount) * 100}% bottom`,
-          scrub: false,
-          onLeave: () => {
-            headline.classList.remove('dust-gather');
-            headline.classList.add('dust-scatter-out');
-          },
-          onEnterBack: () => {
-            headline.classList.remove('dust-scatter-out');
-            headline.classList.add('dust-gather');
-          },
-        });
-      }
+      // 5. Intro headline + hero steps — frame-synced dust effect
+      const headline = textRef.current;
+      let headlineVisible = true;
 
-      // 6. Hero steps — frame-synced dust particle effect
       const steps = gsap.utils.toArray('.hero-step') as HTMLElement[];
-      steps.forEach((step) => {
-        const frameIn = parseInt(step.getAttribute('data-frame-in') || '0');
-        const frameOut = parseInt(step.getAttribute('data-frame-out') || '0');
-        const totalFrames = frameCount;
+      const stepData = steps.map((step) => ({
+        el: step,
+        frameIn: parseInt(step.getAttribute('data-frame-in') || '0'),
+        frameOut: parseInt(step.getAttribute('data-frame-out') || '0'),
+        visible: false,
+      }));
 
-        // Use ScrollTrigger onUpdate to show/hide based on current frame
-        ScrollTrigger.create({
-          trigger: heroRef.current!,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: true,
-          onUpdate: (self) => {
-            const currentFrame = Math.round(self.progress * (totalFrames - 1));
+      ScrollTrigger.create({
+        trigger: heroRef.current!,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: true,
+        onUpdate: (self) => {
+          const currentFrame = Math.round(self.progress * (frameCount - 1));
+
+          // Headline: scatter when past frame 65, gather when before
+          if (headline) {
+            if (currentFrame >= 65 && headlineVisible) {
+              headlineVisible = false;
+              headline.classList.remove('dust-gather');
+              headline.classList.add('dust-scatter-out');
+            } else if (currentFrame < 65 && !headlineVisible) {
+              headlineVisible = true;
+              headline.classList.remove('dust-scatter-out');
+              headline.classList.add('dust-gather');
+            }
+          }
+
+          // Steps
+          stepData.forEach(({ el, frameIn, frameOut, visible }, i) => {
             const isVisible = currentFrame >= frameIn && currentFrame <= frameOut;
-            const wasVisible = step.getAttribute('data-visible') === 'true';
-
-            if (isVisible && !wasVisible) {
-              // Gather: particles come together
-              step.setAttribute('data-visible', 'true');
-              step.classList.remove('opacity-0', 'dust-scatter');
-              step.style.opacity = '1';
-              step.classList.add('dust-gather');
-            } else if (!isVisible && wasVisible) {
-              // Scatter: particles fly apart
-              step.setAttribute('data-visible', 'false');
-              step.classList.remove('dust-gather');
-              step.classList.add('dust-scatter');
+            if (isVisible && !visible) {
+              stepData[i].visible = true;
+              el.classList.remove('dust-scatter');
+              el.style.opacity = '1';
+              el.classList.add('dust-gather');
+            } else if (!isVisible && visible) {
+              stepData[i].visible = false;
+              el.classList.remove('dust-gather');
+              el.classList.add('dust-scatter');
               setTimeout(() => {
-                if (step.getAttribute('data-visible') === 'false') {
-                  step.style.opacity = '0';
-                }
+                if (!stepData[i].visible) el.style.opacity = '0';
               }, 650);
             }
-          },
-        });
+          });
+        },
       });
     },
     { dependencies: [framesReady] }
@@ -417,44 +411,49 @@ function Index() {
               {
                 title: "منبع النكهة",
                 sub: "أجود حبوب البن المختارة بعناية",
-                frames: [72, 158],
+                frames: [150, 258],
+                pos: "bottom-16 right-10 md:right-24 text-right items-end",
               },
               {
                 title: "وهج التحميص",
                 sub: "تحميص متقن يمنح النكهة عمقها",
-                frames: [189, 283],
+                frames: [289, 383],
+                pos: "bottom-16 left-10 md:left-24 text-left items-start",
               },
               {
                 title: "دقة الطحن",
                 sub: "طحن مثالي لاستخلاص متوازن",
-                frames: [310, 370],
+                frames: [410, 470],
+                pos: "bottom-16 right-10 md:right-24 text-right items-end",
               },
               {
                 title: "فن الاستخلاص",
                 sub: "كل قطرة تُحضَّر باتقان",
-                frames: [395, 486],
+                frames: [495, 586],
+                pos: "bottom-16 left-10 md:left-24 text-left items-start",
               },
               {
                 title: "تجربة لا تنسى",
                 sub: "نكهة أصيلة تبقى في الذاكرة",
-                frames: [505, 611],
+                frames: [605, 626],
+                pos: "inset-x-0 bottom-16 text-center items-center",
               },
             ].map((step, idx) => (
               <div
                 key={idx}
-                className="hero-step absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+                className={`hero-step absolute flex flex-col justify-end px-4 pb-2 ${step.pos}`}
                 style={{ opacity: 0 }}
                 data-frame-in={step.frames[0]}
                 data-frame-out={step.frames[1]}
               >
                 <h2
-                  className="dust-text text-5xl md:text-7xl font-bold text-white mb-4 drop-shadow-lg"
-                  style={{ fontFamily: "'Alexandria', sans-serif" }}
+                  className="dust-text text-2xl md:text-4xl font-bold text-white drop-shadow-lg leading-snug"
+                  style={{ fontFamily: "'Qahwa', sans-serif" }}
                 >
                   {step.title}
                 </h2>
                 <p
-                  className="dust-sub text-xl md:text-2xl text-white/70 max-w-xl drop-shadow-md font-light"
+                  className="dust-sub mt-1 text-sm md:text-base text-white/65 font-light max-w-xs"
                   style={{ fontFamily: "'IBMPlexArabic', sans-serif" }}
                 >
                   {step.sub}
