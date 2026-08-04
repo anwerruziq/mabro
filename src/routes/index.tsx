@@ -255,13 +255,13 @@ function Index() {
         onUpdate: (self) => {
           const currentFrame = Math.round(self.progress * (frameCount - 1));
 
-          // Headline: scatter when past frame 65, gather when before
+          // Headline: scatter when past frame 30, gather when before
           if (headline) {
-            if (currentFrame >= 65 && headlineVisible) {
+            if (currentFrame >= 30 && headlineVisible) {
               headlineVisible = false;
               headline.classList.remove('dust-gather');
               headline.classList.add('dust-scatter-out');
-            } else if (currentFrame < 65 && !headlineVisible) {
+            } else if (currentFrame < 30 && !headlineVisible) {
               headlineVisible = true;
               headline.classList.remove('dust-scatter-out');
               headline.classList.add('dust-gather');
@@ -411,31 +411,31 @@ function Index() {
               {
                 title: "منبع النكهة",
                 sub: "أجود حبوب البن المختارة بعناية",
-                frames: [150, 258],
+                frames: [50, 150],
                 pos: "bottom-16 right-10 md:right-24 text-right items-end",
               },
               {
                 title: "وهج التحميص",
                 sub: "تحميص متقن يمنح النكهة عمقها",
-                frames: [289, 383],
+                frames: [165, 265],
                 pos: "bottom-16 left-10 md:left-24 text-left items-start",
               },
               {
                 title: "دقة الطحن",
                 sub: "طحن مثالي لاستخلاص متوازن",
-                frames: [410, 470],
+                frames: [280, 380],
                 pos: "bottom-16 right-10 md:right-24 text-right items-end",
               },
               {
                 title: "فن الاستخلاص",
                 sub: "كل قطرة تُحضَّر باتقان",
-                frames: [495, 586],
+                frames: [395, 495],
                 pos: "bottom-16 left-10 md:left-24 text-left items-start",
               },
               {
                 title: "تجربة لا تنسى",
                 sub: "نكهة أصيلة تبقى في الذاكرة",
-                frames: [605, 626],
+                frames: [510, 610],
                 pos: "inset-x-0 bottom-16 text-center items-center",
               },
             ].map((step, idx) => (
