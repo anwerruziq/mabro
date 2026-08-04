@@ -120,12 +120,36 @@ function Index() {
         setLoadProgress(Math.round((loaded / total) * 100));
         if (loaded === total) {
           setTimeout(() => {
-            setLoaderExiting(true);
-            setTimeout(() => setFramesReady(true), 800);
+            const splash = document.getElementById("splash-loader");
+            if (splash) {
+              splash.style.opacity = "0";
+              splash.style.pointerEvents = "none";
+              setTimeout(() => {
+                splash.remove();
+                setFramesReady(true);
+              }, 800);
+            } else {
+              setFramesReady(true);
+            }
           }, 300);
         }
       };
-      img.onerror = () => { loaded++; if (loaded === total) { setLoaderExiting(true); setTimeout(() => setFramesReady(true), 800); } };
+      img.onerror = () => {
+        loaded++;
+        if (loaded === total) {
+          const splash = document.getElementById("splash-loader");
+          if (splash) {
+            splash.style.opacity = "0";
+            splash.style.pointerEvents = "none";
+            setTimeout(() => {
+              splash.remove();
+              setFramesReady(true);
+            }, 800);
+          } else {
+            setFramesReady(true);
+          }
+        }
+      };
       imagesRef.current[i] = img;
     });
   }, [drawFrame]);
@@ -244,24 +268,6 @@ function Index() {
           className="absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-transparent blur-[120px] will-change-transform transition-colors duration-1000 mix-blend-screen opacity-60"
         />
       </div>
-
-      {/* ── Loading screen ─────────────────────────────────────────────── */}
-      {!framesReady && (
-        <div
-          className={loaderExiting ? "video-loader loader-exit" : "video-loader"}
-          style={{ position: "fixed", inset: 0, zIndex: 9999, background: "#1a0e06", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "24px" }}
-        >
-          <video autoPlay muted loop playsInline src={LOADER_VIDEO_URL}
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 1 }}
-          />
-          <style>{`
-            .video-loader { animation: loaderFadeIn 0.3s ease both; }
-            @keyframes loaderFadeIn { from { opacity: 0; } to { opacity: 1; } }
-            .loader-exit { animation: loaderFadeOut 0.8s ease forwards !important; }
-            @keyframes loaderFadeOut { 0% { opacity: 1; } 100% { opacity: 0; pointer-events: none; } }
-          `}</style>
-        </div>
-      )}
 
       {/* ── Navigation ────────────────────────────────────────────────── */}
       <header className="fixed top-0 left-0 right-0 z-50">

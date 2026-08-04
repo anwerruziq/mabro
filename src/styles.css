@@ -2,7 +2,6 @@
 @source "../src";
 @import "tw-animate-css";
 
-/* ── Qahwa Arabic Custom Font ──────────────────────────────────────────── */
 @font-face {
   font-family: "Qahwa";
   src: url("/Qahwa-Arabic.otf.ttf") format("truetype");
@@ -15,16 +14,16 @@ body {
   font-family: "Qahwa", "Tajawal", system-ui, -apple-system, sans-serif;
 }
 
-h1, h2, h3, .font-display {
+h1,
+h2,
+h3,
+.font-display {
   font-family: "Qahwa", "Tajawal", Georgia, serif;
 }
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * ── Coffee Shop Design System ─────────────────────────────────────────────
- * Warm espresso tones, cream, and caramel highlights.
- */
+
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -69,58 +68,60 @@ h1, h2, h3, .font-display {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* ── Dark Coffee Design System ────────────────────────────────────────────── */
+
 :root {
   --radius: 0.5rem;
 
   /* Very dark burgundy/brown background */
-  --background:        oklch(0.15 0.03 25);
-  --foreground:        oklch(0.9 0.05 65); /* Cream text */
+  --background: oklch(0.15 0.03 25);
+  --foreground: oklch(0.9 0.05 65);
+  /* Cream text */
 
   /* Cards slightly lighter than bg */
-  --card:              oklch(0.18 0.035 25);
-  --card-foreground:   oklch(0.9 0.05 65);
+  --card: oklch(0.18 0.035 25);
+  --card-foreground: oklch(0.9 0.05 65);
 
-  --popover:           oklch(0.18 0.035 25);
-  --popover-foreground:oklch(0.9 0.05 65);
+  --popover: oklch(0.18 0.035 25);
+  --popover-foreground: oklch(0.9 0.05 65);
 
   /* Primary: Gold/Amber for buttons and highlights */
-  --primary:           oklch(0.7 0.15 65);
-  --primary-foreground:oklch(0.15 0.03 25);
+  --primary: oklch(0.7 0.15 65);
+  --primary-foreground: oklch(0.15 0.03 25);
 
   /* Secondary: Muted brown */
-  --secondary:         oklch(0.25 0.04 25);
-  --secondary-foreground:oklch(0.85 0.04 65);
+  --secondary: oklch(0.25 0.04 25);
+  --secondary-foreground: oklch(0.85 0.04 65);
 
   /* Muted: Deep red-brown */
-  --muted:             oklch(0.2 0.03 25);
-  --muted-foreground:  oklch(0.65 0.04 65); /* Dimmer cream */
+  --muted: oklch(0.2 0.03 25);
+  --muted-foreground: oklch(0.65 0.04 65);
+  /* Dimmer cream */
 
   /* Accent: Same as secondary */
-  --accent:            oklch(0.25 0.04 25);
+  --accent: oklch(0.25 0.04 25);
   --accent-foreground: oklch(0.9 0.05 65);
 
-  --destructive:       oklch(0.396 0.141 25.723);
+  --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.9 0.05 65);
 
-  --border:            oklch(0.25 0.03 25);
-  --input:             oklch(0.25 0.03 25);
-  --ring:              oklch(0.7 0.15 65);
+  --border: oklch(0.25 0.03 25);
+  --input: oklch(0.25 0.03 25);
+  --ring: oklch(0.7 0.15 65);
 
   --chart-1: oklch(0.7 0.15 65);
   --chart-2: oklch(0.6 0.12 40);
   --chart-3: oklch(0.5 0.1 25);
   --chart-4: oklch(0.4 0.08 15);
   --chart-5: oklch(0.3 0.06 10);
-  
-  --sidebar:             oklch(0.19 0.035 45);
-  --sidebar-foreground:  oklch(0.95 0.015 78);
-  --sidebar-primary:     oklch(0.75 0.11 68);
+
+  --sidebar: oklch(0.19 0.035 45);
+  --sidebar-foreground: oklch(0.95 0.015 78);
+  --sidebar-primary: oklch(0.75 0.11 68);
   --sidebar-primary-foreground: oklch(0.14 0.03 45);
-  --sidebar-accent:      oklch(0.68 0.13 65);
-  --sidebar-accent-foreground:  oklch(0.14 0.03 45);
-  --sidebar-border:      oklch(1 0 0 / 10%);
-  --sidebar-ring:        oklch(0.60 0.08 60);
+  --sidebar-accent: oklch(0.68 0.13 65);
+  --sidebar-accent-foreground: oklch(0.14 0.03 45);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.60 0.08 60);
 }
 
 @layer base {
@@ -133,11 +134,13 @@ h1, h2, h3, .font-display {
     color: var(--color-foreground);
   }
 }
+
 /* ── Utilities ───────────────────────────────────────────────────────────── */
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
