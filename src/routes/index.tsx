@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -8,8 +8,35 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-// ─── Hero video (background scroll-scrub) ─────────────────────────────────
-const HERO_VIDEO_URL = "/Coffee_beans_form_coffee_cup_202607181643.mp4";
+// ─── Frame Sequence Config ─────────────────────────────────────────────────
+const FRAME_NAMES = Array.from({ length: 146 }, (_, i) => {
+  const num = String(i + 1).padStart(4, "0");
+  // reconstruct original filenames from the sorted list
+  const timestamps = [
+    "0-00","0-14","0-29","0-43","0-57","0-71","0-86",
+    "1-00","1-14","1-29","1-43","1-57","1-71","1-86",
+    "2-00","2-14","2-29","2-43","2-57","2-71","2-86",
+    "3-00","3-14","3-29","3-43","3-57","3-71","3-86",
+    "4-00","4-14","4-29","4-43","4-57","4-71","4-86",
+    "5-00","5-14","5-29","5-43","5-57","5-71","5-86",
+    "6-00","6-14","6-29","6-43","6-57","6-71","6-86",
+    "7-00","7-14","7-29","7-43","7-57","7-71","7-86",
+    "8-00","8-14","8-29","8-43","8-57","8-71","8-86",
+    "9-00","9-14","9-29","9-43","9-57","9-71","9-86",
+    "10-00","10-14","10-29","10-43","10-57","10-71","10-86",
+    "11-00","11-14","11-29","11-43","11-57","11-71","11-86",
+    "12-00","12-14","12-29","12-43","12-57","12-71","12-86",
+    "13-00","13-14","13-29","13-43","13-57","13-71","13-86",
+    "14-00","14-14","14-29","14-43","14-57","14-71","14-86",
+    "15-00","15-14","15-29","15-43","15-57","15-71","15-86",
+    "16-00","16-14","16-29","16-43","16-57","16-71","16-86",
+    "17-00","17-14","17-29","17-43","17-57","17-71","17-86",
+    "18-00","18-14","18-29","18-43","18-57","18-71","18-86",
+    "19-00","19-14","19-29","19-43","19-57","19-71","19-86",
+    "20-00","20-14","20-29","20-43","20-57","20-71",
+  ];
+  return `/frame/frames-extractor-${num}-${timestamps[i]}.jpg`;
+});
 
 // ─── Loading screen video ──────────────────────────────────────────────────
 const LOADER_VIDEO_URL = "/motion-graphics.mp4";
@@ -59,169 +86,192 @@ function VideoLoader({ exiting }: { exiting: boolean }) {
 
 function Index() {
   const [open, setOpen] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
+  const [framesReady, setFramesReady] = useState(false);
   const [loaderExiting, setLoaderExiting] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(0);
 
   const heroRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const lightRef = useRef<HTMLDivElement>(null);
-  const currentTimeRef = useRef(0);
+  const imagesRef = useRef<HTMLImageElement[]>([]);
+  const frameIndexRef = useRef({ value: 0 });
 
-  // ─── Preload hero video, show loader until ready ──────────────────────
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+  // ─── Draw a frame on the canvas (cover fit) ───────────────────────────
+  const drawFrame = useCallback((index: number) => {
+    const canvas = canvasRef.current;
+    const img = imagesRef.current[index];
+    if (!canvas || !img || !img.complete) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    let objectUrl = "";
-    let isCancelled = false;
-
-    const loadVideo = async () => {
-      try {
-        // Fetch the entire video as a blob so it plays and scrubs perfectly
-        // This guarantees the loading screen stays until 100% downloaded
-        const response = await fetch(HERO_VIDEO_URL);
-        const blob = await response.blob();
-        if (isCancelled) return;
-
-        objectUrl = URL.createObjectURL(blob);
-        video.src = objectUrl;
-
-        const onReady = () => {
-          setTimeout(() => {
-            setLoaderExiting(true);
-            setTimeout(() => setVideoReady(true), 800);
-          }, 300);
-        };
-
-        if (video.readyState >= 4) { onReady(); }
-        else { video.addEventListener("canplaythrough", onReady, { once: true }); }
-        
-        video.load();
-      } catch (error) {
-        console.error("Video load error:", error);
-        // Fallback to direct URL streaming if fetch fails
-        if (isCancelled) return;
-        video.src = HERO_VIDEO_URL;
-        setLoaderExiting(true);
-        setTimeout(() => setVideoReady(true), 800);
-      }
-    };
-
-    loadVideo();
-
-    return () => {
-      isCancelled = true;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-    };
+    const cw = canvas.width;
+    const ch = canvas.height;
+    const iw = img.naturalWidth;
+    const ih = img.naturalHeight;
+    const scale = Math.max(cw / iw, ch / ih);
+    const x = (cw - iw * scale) / 2;
+    const y = (ch - ih * scale) / 2;
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.drawImage(img, x, y, iw * scale, ih * scale);
   }, []);
 
-  // ─── GSAP Scroll Animations ────────────────────────────────────────
-  useGSAP(() => {
-    // 1. Dynamic Lighting
-    const sections = gsap.utils.toArray('section:not(#home)');
-    sections.forEach((sec: any, i) => {
-      ScrollTrigger.create({
-        trigger: sec,
-        start: "top center",
-        end: "bottom center",
-        onEnter: () => gsap.to(lightRef.current, { backgroundColor: i % 2 === 0 ? "rgba(245, 158, 11, 0.08)" : "rgba(59, 130, 246, 0.08)", scale: 1.2 + i * 0.1, duration: 1.5 }),
-        onEnterBack: () => gsap.to(lightRef.current, { backgroundColor: i % 2 === 0 ? "rgba(245, 158, 11, 0.08)" : "rgba(59, 130, 246, 0.08)", scale: 1.2 + i * 0.1, duration: 1.5 }),
-      });
-    });
+  // ─── Preload all frames ────────────────────────────────────────────────
+  useEffect(() => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobile = window.innerWidth < 768;
 
-    // 2. Parallax Layers
-    gsap.utils.toArray('[data-speed]').forEach((el: any) => {
-      const speed = parseFloat(el.getAttribute('data-speed'));
-      gsap.to(el, {
-        y: () => -100 * speed,
-        ease: "none",
-        scrollTrigger: {
-          trigger: el,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true
+    // On mobile use every other frame; on reduced-motion just first+last
+    let urls = FRAME_NAMES;
+    if (prefersReduced) {
+      urls = [FRAME_NAMES[0], FRAME_NAMES[FRAME_NAMES.length - 1]];
+    } else if (isMobile) {
+      urls = FRAME_NAMES.filter((_, i) => i % 2 === 0);
+    }
+
+    imagesRef.current = [];
+    let loaded = 0;
+    const total = urls.length;
+
+    // Draw frame 0 immediately so canvas isn't blank
+    const firstImg = new Image();
+    firstImg.src = urls[0];
+    firstImg.onload = () => drawFrame(0);
+    imagesRef.current[0] = firstImg;
+
+    urls.forEach((src, i) => {
+      if (i === 0) { loaded++; setLoadProgress(Math.round((loaded / total) * 100)); return; }
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        loaded++;
+        setLoadProgress(Math.round((loaded / total) * 100));
+        if (loaded === total) {
+          setTimeout(() => {
+            setLoaderExiting(true);
+            setTimeout(() => setFramesReady(true), 800);
+          }, 300);
         }
-      });
+      };
+      img.onerror = () => { loaded++; if (loaded === total) { setLoaderExiting(true); setTimeout(() => setFramesReady(true), 800); } };
+      imagesRef.current[i] = img;
     });
+  }, [drawFrame]);
 
-    // 3. Fade & Reveal Texts
-    gsap.utils.toArray('.reveal-text').forEach((text: any) => {
-      gsap.from(text, {
-        scrollTrigger: { trigger: text, start: "top 85%" },
-        y: 40,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out"
+  // ─── Keep canvas sized to viewport ────────────────────────────────────
+  useEffect(() => {
+    const resize = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      drawFrame(frameIndexRef.current.value);
+    };
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, [drawFrame]);
+
+  // ─── GSAP Scroll Animations ────────────────────────────────────────
+  useGSAP(
+    () => {
+      if (!framesReady) return;
+
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const isMobile = window.innerWidth < 768;
+      const frameCount = isMobile ? Math.ceil(FRAME_NAMES.length / 2) : FRAME_NAMES.length;
+
+      // 1. Dynamic Lighting
+      const sections = gsap.utils.toArray('section:not(#home)');
+      sections.forEach((sec: any, i) => {
+        ScrollTrigger.create({
+          trigger: sec,
+          start: "top center",
+          end: "bottom center",
+          onEnter: () => gsap.to(lightRef.current, { backgroundColor: i % 2 === 0 ? "rgba(245, 158, 11, 0.08)" : "rgba(59, 130, 246, 0.08)", scale: 1.2 + i * 0.1, duration: 1.5 }),
+          onEnterBack: () => gsap.to(lightRef.current, { backgroundColor: i % 2 === 0 ? "rgba(245, 158, 11, 0.08)" : "rgba(59, 130, 246, 0.08)", scale: 1.2 + i * 0.1, duration: 1.5 }),
+        });
       });
-    });
 
-    // 4. Hero Text Sequence & Unified Video Scrubbing
-    const video = videoRef.current;
-    if (heroRef.current) {
+      // 2. Parallax Layers
+      gsap.utils.toArray('[data-speed]').forEach((el: any) => {
+        const speed = parseFloat(el.getAttribute('data-speed'));
+        gsap.to(el, {
+          y: () => -100 * speed,
+          ease: "none",
+          scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true }
+        });
+      });
+
+      // 3. Fade & Reveal Texts
+      gsap.utils.toArray('.reveal-text').forEach((text: any) => {
+        gsap.from(text, {
+          scrollTrigger: { trigger: text, start: "top 85%" },
+          y: 40, opacity: 0, duration: 1, ease: "power3.out"
+        });
+      });
+
+      if (!heroRef.current) return;
+
+      if (prefersReduced) {
+        // Reduced-motion: just show first frame, jump to last at end
+        drawFrame(0);
+        ScrollTrigger.create({
+          trigger: heroRef.current,
+          start: "bottom bottom",
+          onEnter: () => drawFrame(frameCount - 1),
+          onLeaveBack: () => drawFrame(0),
+        });
+        return;
+      }
+
+      // 4. Canvas frame scrub (Apple-style)
+      const frameProxy = frameIndexRef.current;
+      ScrollTrigger.create({
+        trigger: heroRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.5,
+        onUpdate: (self) => {
+          const idx = Math.round(self.progress * (frameCount - 1));
+          if (idx !== frameProxy.value) {
+            frameProxy.value = idx;
+            requestAnimationFrame(() => drawFrame(idx));
+          }
+        },
+      });
+
+      // 5. Hero text & steps timeline
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: heroRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1.5 // Adds 1.5 seconds of smoothing/inertia to make the video feel buttery smooth
-        }
+          scrub: 1.5,
+        },
       });
 
-      // First: fade out hero intro text
       if (textRef.current) {
         tl.to(textRef.current, { y: -150, opacity: 0, duration: 1, ease: "none" });
       }
 
-      // Then: cycle through each step
       gsap.utils.toArray('.hero-step').forEach((step: any) => {
         tl.fromTo(step, { y: 150, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "none" })
           .to(step, { y: -150, opacity: 0, duration: 1, ease: "none" });
       });
 
-      // Remove video tween from here so we can throttle it separately
-    }
-
-    // 5. Throttled Video Scrubbing (Fixes heavy browser lag)
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    
-    if (video && heroRef.current) {
-      if (isMobile) {
-        // Mobile fallback: Hardware decoding can't handle scrubbing
-        // Just play it smoothly in the background at half speed
-        video.playbackRate = 0.6;
-        video.loop = true;
-        video.play().catch(console.error);
-      } else {
-        // Desktop: High performance scrubbing
-        video.pause();
-        
-        let targetTime = 0;
-        let lastUpdateTime = 0;
-
-        ScrollTrigger.create({
-          trigger: heroRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: true,
-          onUpdate: (self) => {
-            if (!Number.isNaN(video.duration) && video.duration > 0) {
-              targetTime = self.progress * (video.duration - 0.05);
-              const now = Date.now();
-              
-              // Throttle to 200ms (5 FPS) to eliminate CPU spikes
-              if (now - lastUpdateTime > 200 && Math.abs(video.currentTime - targetTime) > 0.05) {
-                requestAnimationFrame(() => {
-                  if (video) video.currentTime = targetTime;
-                });
-                lastUpdateTime = now;
-              }
-            }
-          }
-        });
-      }
-    }
-  });
+      // 6. Headline fade-in over canvas
+      gsap.fromTo(
+        "#hero-headline",
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
+          scrollTrigger: { trigger: heroRef.current, start: "top top", toggleActions: "play none none reverse" },
+        }
+      );
+    },
+    { dependencies: [framesReady] }
+  );
 
   return (
     <div dir="rtl" className="relative min-h-screen bg-background" style={{ fontFamily: "'Qahwa', sans-serif" }}>
@@ -234,7 +284,30 @@ function Index() {
       </div>
 
       {/* ── Loading screen ─────────────────────────────────────────────── */}
-      {!videoReady && <VideoLoader exiting={loaderExiting} />}
+      {!framesReady && (
+        <div
+          className={loaderExiting ? "video-loader loader-exit" : "video-loader"}
+          style={{ position: "fixed", inset: 0, zIndex: 9999, background: "#1a0e06", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "24px" }}
+        >
+          <video autoPlay muted loop playsInline src={LOADER_VIDEO_URL}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }}
+          />
+          {/* Progress bar */}
+          <div style={{ position: "relative", zIndex: 2, textAlign: "center" }}>
+            <p style={{ color: "#ebd9c8", fontSize: "13px", letterSpacing: "0.15em", marginBottom: "12px", textTransform: "uppercase", opacity: 0.7 }}>تحميل التجربة…</p>
+            <div style={{ width: "200px", height: "2px", background: "rgba(235,217,200,0.2)", borderRadius: "2px", overflow: "hidden", margin: "0 auto" }}>
+              <div style={{ height: "100%", background: "#ebd9c8", borderRadius: "2px", transition: "width 0.3s ease", width: `${loadProgress}%` }} />
+            </div>
+            <p style={{ color: "#ebd9c8", fontSize: "11px", marginTop: "8px", opacity: 0.5 }}>{loadProgress}%</p>
+          </div>
+          <style>{`
+            .video-loader { animation: loaderFadeIn 0.3s ease both; }
+            @keyframes loaderFadeIn { from { opacity: 0; } to { opacity: 1; } }
+            .loader-exit { animation: loaderFadeOut 0.8s ease forwards !important; }
+            @keyframes loaderFadeOut { 0% { opacity: 1; } 100% { opacity: 0; pointer-events: none; } }
+          `}</style>
+        </div>
+      )}
 
       {/* ── Navigation ────────────────────────────────────────────────── */}
       <header className="fixed top-0 left-0 right-0 z-50">
@@ -307,20 +380,27 @@ function Index() {
         </nav>
       </header>
 
-      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      {/* ── Hero — Canvas Frame Sequence (Apple-style) ─────────────────── */}
       <section ref={heroRef} id="home" className="relative h-[400vh] bg-black">
         <div className="sticky top-0 h-[100dvh] overflow-hidden bg-black">
-          <video
-            ref={videoRef}
-            className="absolute inset-0 h-full w-full object-cover object-center [backface-visibility:hidden] [transform:translateZ(0)]"
-            muted playsInline preload="auto"
-            fetchPriority="high"
+          {/* Canvas replaces the video */}
+          <canvas
+            ref={canvasRef}
+            className="absolute inset-0 h-full w-full [backface-visibility:hidden]"
+            style={{ display: "block" }}
           />
+
           {/* Warm gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/65" />
           <div className="absolute inset-0 bg-gradient-to-l from-black/20 to-transparent" />
 
-          <div ref={textRef} className="relative z-10 flex h-full flex-col items-center justify-center px-6 pt-20 text-center will-change-transform">
+          {/* Intro headline — fades in over the sequence */}
+          <div
+            id="hero-headline"
+            ref={textRef}
+            className="relative z-10 flex h-full flex-col items-center justify-center px-6 pt-20 text-center will-change-transform"
+            style={{ opacity: 0 }}
+          >
             <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold tracking-widest text-white/80 uppercase backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
               قهوة متخصصة · منذ ٢٠١٨
@@ -384,7 +464,6 @@ function Index() {
               <p className="text-xl md:text-2xl text-white/80 max-w-2xl drop-shadow-md">نهتم بالناس والكوكب الذي نزرع فيه.</p>
             </div>
           </div>
-
         </div>
       </section>
 
