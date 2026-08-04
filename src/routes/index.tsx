@@ -411,13 +411,13 @@ function Index() {
               {
                 title: "منبع النكهة",
                 sub: "أجود حبوب البن المختارة بعناية",
-                frames: [25, 110],
+                frames: [40, 125],
                 pos: "bottom-16 right-10 md:right-24 text-right items-end",
               },
               {
                 title: "وهج التحميص",
                 sub: "تحميص متقن يمنح النكهة عمقها",
-                frames: [130, 240],
+                frames: [145, 255],
                 pos: "bottom-16 left-10 md:left-24 text-left items-start",
               },
               {
