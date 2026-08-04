@@ -411,31 +411,31 @@ function Index() {
               {
                 title: "منبع النكهة",
                 sub: "أجود حبوب البن المختارة بعناية",
-                frames: [40, 125],
+                frames: [72, 158],
                 pos: "bottom-16 right-10 md:right-24 text-right items-end",
               },
               {
                 title: "وهج التحميص",
                 sub: "تحميص متقن يمنح النكهة عمقها",
-                frames: [145, 255],
+                frames: [189, 283],
                 pos: "bottom-16 left-10 md:left-24 text-left items-start",
               },
               {
                 title: "دقة الطحن",
                 sub: "طحن مثالي لاستخلاص متوازن",
-                frames: [260, 370],
+                frames: [310, 370],
                 pos: "bottom-16 right-10 md:right-24 text-right items-end",
               },
               {
                 title: "فن الاستخلاص",
                 sub: "كل قطرة تُحضَّر باتقان",
-                frames: [390, 500],
+                frames: [395, 486],
                 pos: "bottom-16 left-10 md:left-24 text-left items-start",
               },
               {
                 title: "تجربة لا تنسى",
                 sub: "نكهة أصيلة تبقى في الذاكرة",
-                frames: [520, 610],
+                frames: [505, 611],
                 pos: "inset-x-0 bottom-16 text-center items-center",
               },
             ].map((step, idx) => (
