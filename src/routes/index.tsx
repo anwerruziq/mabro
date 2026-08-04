@@ -9,33 +9,11 @@ if (typeof window !== "undefined") {
 }
 
 // ─── Frame Sequence Config ─────────────────────────────────────────────────
-const FRAME_NAMES = Array.from({ length: 146 }, (_, i) => {
+const FRAME_NAMES = Array.from({ length: 209 }, (_, i) => {
   const num = String(i + 1).padStart(4, "0");
-  // reconstruct original filenames from the sorted list
-  const timestamps = [
-    "0-00","0-14","0-29","0-43","0-57","0-71","0-86",
-    "1-00","1-14","1-29","1-43","1-57","1-71","1-86",
-    "2-00","2-14","2-29","2-43","2-57","2-71","2-86",
-    "3-00","3-14","3-29","3-43","3-57","3-71","3-86",
-    "4-00","4-14","4-29","4-43","4-57","4-71","4-86",
-    "5-00","5-14","5-29","5-43","5-57","5-71","5-86",
-    "6-00","6-14","6-29","6-43","6-57","6-71","6-86",
-    "7-00","7-14","7-29","7-43","7-57","7-71","7-86",
-    "8-00","8-14","8-29","8-43","8-57","8-71","8-86",
-    "9-00","9-14","9-29","9-43","9-57","9-71","9-86",
-    "10-00","10-14","10-29","10-43","10-57","10-71","10-86",
-    "11-00","11-14","11-29","11-43","11-57","11-71","11-86",
-    "12-00","12-14","12-29","12-43","12-57","12-71","12-86",
-    "13-00","13-14","13-29","13-43","13-57","13-71","13-86",
-    "14-00","14-14","14-29","14-43","14-57","14-71","14-86",
-    "15-00","15-14","15-29","15-43","15-57","15-71","15-86",
-    "16-00","16-14","16-29","16-43","16-57","16-71","16-86",
-    "17-00","17-14","17-29","17-43","17-57","17-71","17-86",
-    "18-00","18-14","18-29","18-43","18-57","18-71","18-86",
-    "19-00","19-14","19-29","19-43","19-57","19-71","19-86",
-    "20-00","20-14","20-29","20-43","20-57","20-71",
-  ];
-  return `/frame/frames-extractor-${num}-${timestamps[i]}.jpg`;
+  const sec = Math.floor(i / 10);
+  const ms = (i % 10) * 10;
+  return `/frame/frames-extractor-${num}-${sec}-${String(ms).padStart(2, "0")}.jpg`;
 });
 
 // ─── Loading screen video ──────────────────────────────────────────────────
@@ -281,16 +259,8 @@ function Index() {
           style={{ position: "fixed", inset: 0, zIndex: 9999, background: "#1a0e06", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "24px" }}
         >
           <video autoPlay muted loop playsInline src={LOADER_VIDEO_URL}
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 1 }}
           />
-          {/* Progress bar */}
-          <div style={{ position: "relative", zIndex: 2, textAlign: "center" }}>
-            <p style={{ color: "#ebd9c8", fontSize: "13px", letterSpacing: "0.15em", marginBottom: "12px", textTransform: "uppercase", opacity: 0.7 }}>تحميل التجربة…</p>
-            <div style={{ width: "200px", height: "2px", background: "rgba(235,217,200,0.2)", borderRadius: "2px", overflow: "hidden", margin: "0 auto" }}>
-              <div style={{ height: "100%", background: "#ebd9c8", borderRadius: "2px", transition: "width 0.3s ease", width: `${loadProgress}%` }} />
-            </div>
-            <p style={{ color: "#ebd9c8", fontSize: "11px", marginTop: "8px", opacity: 0.5 }}>{loadProgress}%</p>
-          </div>
           <style>{`
             .video-loader { animation: loaderFadeIn 0.3s ease both; }
             @keyframes loaderFadeIn { from { opacity: 0; } to { opacity: 1; } }
