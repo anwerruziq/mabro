@@ -97,14 +97,10 @@ function Index() {
   // ─── Preload all frames ────────────────────────────────────────────────
   useEffect(() => {
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const isMobile = window.innerWidth < 768;
-
-    // On mobile use every other frame; on reduced-motion just first+last
+    // On reduced-motion just first+last
     let urls = FRAME_NAMES;
     if (prefersReduced) {
       urls = [FRAME_NAMES[0], FRAME_NAMES[FRAME_NAMES.length - 1]];
-    } else if (isMobile) {
-      urls = FRAME_NAMES.filter((_, i) => i % 2 === 0);
     }
 
     imagesRef.current = [];
@@ -156,8 +152,7 @@ function Index() {
       if (!framesReady) return;
 
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const isMobile = window.innerWidth < 768;
-      const frameCount = isMobile ? Math.ceil(FRAME_NAMES.length / 2) : FRAME_NAMES.length;
+      const frameCount = FRAME_NAMES.length;
 
       // 1. Dynamic Lighting
       const sections = gsap.utils.toArray('section:not(#home)');
@@ -342,7 +337,7 @@ function Index() {
       </header>
 
       {/* ── Hero — Canvas Frame Sequence (Apple-style) ─────────────────── */}
-      <section ref={heroRef} id="home" className="relative h-[400vh] bg-black">
+      <section ref={heroRef} id="home" className="relative h-[700vh] bg-black">
         <div className="sticky top-0 h-[100dvh] overflow-hidden bg-black">
           {/* Canvas replaces the video */}
           <canvas
