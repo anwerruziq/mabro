@@ -226,19 +226,18 @@ function Index() {
       }
 
       // 4. Canvas frame scrub (Apple-style)
-      const frameProxy = frameIndexRef.current;
-      ScrollTrigger.create({
-        trigger: heroRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 0.5,
-        onUpdate: (self) => {
-          const idx = Math.round(self.progress * (frameCount - 1));
-          if (idx !== frameProxy.value) {
-            frameProxy.value = idx;
-            requestAnimationFrame(() => drawFrame(idx));
-          }
+      gsap.to(frameIndexRef.current, {
+        value: frameCount - 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1.5,
         },
+        onUpdate: () => {
+          requestAnimationFrame(() => drawFrame(Math.round(frameIndexRef.current.value)));
+        }
       });
 
       // 5. Hero text & steps timeline
