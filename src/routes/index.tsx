@@ -485,10 +485,10 @@ function Index() {
           {/* Cards Side */}
           <div className="lg:w-2/3 grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { img: "/coffee_menu.png", title: "لاتيه كراميل", desc: "سلس. حلو. مثالي.", price: "٢٢ ريال" },
-              { img: "/coffee_menu.png", title: "فانيليا مثلج", desc: "بارد. كريمي. منعش.", price: "٢٤ ريال" },
-              { img: "/coffee_menu.png", title: "موكا بليس", desc: "غني. جريء. فاخر.", price: "٢٦ ريال" },
-              { img: "/coffee_story.png", title: "كعكة الشوكولاتة", desc: "هشة ولذيذة.", price: "١٨ ريال" },
+              { img: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?q=80&w=400&auto=format&fit=crop", title: "لاتيه كراميل", desc: "سلس. حلو. مثالي.", price: "٢٢ ريال" },
+              { img: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba9?q=80&w=400&auto=format&fit=crop", title: "فانيليا مثلج", desc: "بارد. كريمي. منعش.", price: "٢٤ ريال" },
+              { img: "https://images.unsplash.com/photo-1534687941688-1b22dbf9e992?q=80&w=400&auto=format&fit=crop", title: "موكا بليس", desc: "غني. جريء. فاخر.", price: "٢٦ ريال" },
+              { img: "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?q=80&w=400&auto=format&fit=crop", title: "كعكة الشوكولاتة", desc: "هشة ولذيذة.", price: "١٨ ريال" },
             ].map((item, i) => (
               <div key={item.title} className="group rounded-sm border border-border/20 bg-[#280d0a]/50 overflow-hidden hover:border-[#ebd9c8]/30 transition-colors">
                 <div className="aspect-[4/5] overflow-hidden relative">
@@ -522,7 +522,7 @@ function Index() {
         </div>
         {/* Right Side (Image) */}
         <div className="flex-1">
-           <img src="/barista_brewing.png" alt="تحضير القهوة" className="w-full h-full object-cover min-h-[500px]" />
+           <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=800&auto=format&fit=crop" alt="تحضير القهوة" className="w-full h-full object-cover min-h-[500px]" />
         </div>
       </section>
 
@@ -544,6 +544,7 @@ function Index() {
                 notes: "ياسمين، توت أزرق، ليمون",
                 roast: "فاتح",
                 price: "٧٥ ريال",
+                img: "https://images.unsplash.com/photo-1559525839-b184a4d698c7?q=80&w=600&auto=format&fit=crop",
               },
               {
                 id: 2,
@@ -551,6 +552,7 @@ function Index() {
                 notes: "شوكولاتة داكنة، كراميل، جوز",
                 roast: "متوسط",
                 price: "٦٥ ريال",
+                img: "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?q=80&w=600&auto=format&fit=crop",
               },
               {
                 id: 3,
@@ -558,11 +560,13 @@ function Index() {
                 notes: "بندق، عسل، كاكاو",
                 roast: "متوسط إلى غامق",
                 price: "٨٠ ريال",
+                img: "https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?q=80&w=600&auto=format&fit=crop",
               }
             ].map((product) => (
               <div key={product.id} className="min-w-[85vw] md:min-w-0 shrink-0 snap-center group rounded-2xl border border-[#ebd9c8]/10 bg-[#ebd9c8]/5 overflow-hidden transition-all hover:border-[#ebd9c8]/30 hover:bg-[#ebd9c8]/10">
-                <div className="aspect-[4/3] relative bg-[#ebd9c8]/10 p-8 flex items-center justify-center overflow-hidden">
-                  <i className="bx bx-shopping-bag text-[70px] text-[#ebd9c8]/30 group-hover:scale-110 transition-transform duration-500"></i>
+                <div className="aspect-[4/3] relative overflow-hidden">
+                  <img src={product.img} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#150605] via-transparent to-transparent opacity-60"></div>
                 </div>
                 <div className="p-6 text-center">
                   <h3 className="text-lg font-bold text-[#ebd9c8] mb-1">{product.name}</h3>
