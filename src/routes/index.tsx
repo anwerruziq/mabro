@@ -90,7 +90,10 @@ function Index() {
     const x = (cw - iw * scale) / 2;
     const y = (ch - ih * scale) / 2;
     ctx.clearRect(0, 0, cw, ch);
+    // Enhance brightness and contrast for clearer frames
+    ctx.filter = "brightness(1.15) contrast(1.1) saturate(1.05)";
     ctx.drawImage(img, x, y, iw * scale, ih * scale);
+    ctx.filter = "none";
   }, []);
 
   // ─── Preload all frames ────────────────────────────────────────────────
@@ -404,11 +407,11 @@ function Index() {
           {/* Canvas replaces the video */}
           <canvas
             ref={canvasRef}
-            className="absolute inset-0 h-full w-full [backface-visibility:hidden]"
-            style={{ display: "block" }}
+            className="absolute inset-0 h-full w-full"
+            style={{ display: "block", imageRendering: "auto", willChange: "transform" }}
           />
 
-          {/* Overlays removed for clearer frames */}
+          {/* No overlay — frames shown at full clarity */}
 
           {/* Intro headline — dust gather on load, scatter on scroll */}
           <div
