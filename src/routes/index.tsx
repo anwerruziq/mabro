@@ -235,17 +235,22 @@ function Index() {
         }
       });
 
-      // 5. Intro headline fade out
+      // 5. Intro headline — dust scatter on scroll
       if (textRef.current) {
-        gsap.to(textRef.current, {
-          y: -80,
-          opacity: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top top",
-            end: `${(70 / frameCount) * 100}% bottom`,
-            scrub: 1,
+        const headline = textRef.current;
+        // Start with gather animation (already applied via CSS class in JSX)
+        ScrollTrigger.create({
+          trigger: heroRef.current,
+          start: 'top top',
+          end: `${(65 / frameCount) * 100}% bottom`,
+          scrub: false,
+          onLeave: () => {
+            headline.classList.remove('dust-gather');
+            headline.classList.add('dust-scatter-out');
+          },
+          onEnterBack: () => {
+            headline.classList.remove('dust-scatter-out');
+            headline.classList.add('dust-gather');
           },
         });
       }
@@ -385,22 +390,22 @@ function Index() {
 
           {/* Overlays removed for clearer frames */}
 
-          {/* Intro headline */}
+          {/* Intro headline — dust gather on load, scatter on scroll */}
           <div
             id="hero-headline"
             ref={textRef}
-            className="relative z-10 flex h-full flex-col items-center justify-center px-6 pt-20 text-center will-change-transform"
+            className="dust-gather relative z-10 flex h-full flex-col items-center justify-center px-6 pt-20 text-center will-change-transform"
           >
             <h1 className="leading-tight text-white drop-shadow-lg" style={{ fontFamily: "'Alexandria', sans-serif" }}>
-              <span className="block text-6xl font-light md:text-7xl lg:text-8xl opacity-90">
+              <span className="dust-text block text-6xl font-light md:text-7xl lg:text-8xl opacity-90">
                 كل
               </span>
-              <span className="block text-6xl font-bold md:text-7xl lg:text-8xl">
+              <span className="dust-text block text-6xl font-bold md:text-7xl lg:text-8xl">
                 رشفة تحكي قصة.
               </span>
             </h1>
 
-            <div className="mt-16 flex animate-bounce items-center gap-2 text-sm text-white/50">
+            <div className="dust-sub mt-16 flex animate-bounce items-center gap-2 text-sm text-white/50">
               <span>مرّر للاستكشاف</span>
               <i className="bx bx-chevron-down text-[22px]"></i>
             </div>

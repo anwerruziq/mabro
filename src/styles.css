@@ -347,3 +347,49 @@ h3,
 .dust-scatter .dust-sub {
   animation: dustScatterSub 0.5s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
 }
+
+/* Scatter-out: hero headline disappears when scrolling away */
+@keyframes dustScatterOutTitle {
+  0% {
+    opacity: 1;
+    filter: blur(0px);
+    letter-spacing: normal;
+    transform: scale(1) translateY(0);
+  }
+  30% {
+    opacity: 0.8;
+    filter: blur(3px);
+    letter-spacing: 0.08em;
+    transform: scale(1.03) translateY(-10px);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(32px);
+    letter-spacing: 0.7em;
+    transform: scale(1.25) translateY(-80px);
+  }
+}
+
+@keyframes dustScatterOutSub {
+  0% {
+    opacity: 1;
+    filter: blur(0px);
+    letter-spacing: normal;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(20px);
+    letter-spacing: 0.45em;
+    transform: translateY(-50px) scale(1.1);
+  }
+}
+
+.dust-scatter-out .dust-text {
+  animation: dustScatterOutTitle 0.65s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
+  pointer-events: none;
+}
+.dust-scatter-out .dust-sub {
+  animation: dustScatterOutSub 0.5s cubic-bezier(0.55, 0.06, 0.68, 0.19) 0.05s forwards;
+  pointer-events: none;
+}
