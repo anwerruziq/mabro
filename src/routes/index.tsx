@@ -253,35 +253,37 @@ function Index() {
       // 6. Hero steps — frame-synced dust particle effect
       const steps = gsap.utils.toArray('.hero-step') as HTMLElement[];
       steps.forEach((step) => {
-        const frameIn = parseInt(step.dataset.frameIn || "0");
-        const frameOut = parseInt(step.dataset.frameOut || "0");
+        const frameIn = parseInt(step.getAttribute('data-frame-in') || '0');
+        const frameOut = parseInt(step.getAttribute('data-frame-out') || '0');
         const totalFrames = frameCount;
 
         // Use ScrollTrigger onUpdate to show/hide based on current frame
         ScrollTrigger.create({
           trigger: heroRef.current!,
-          start: "top top",
-          end: "bottom bottom",
+          start: 'top top',
+          end: 'bottom bottom',
           scrub: true,
           onUpdate: (self) => {
             const currentFrame = Math.round(self.progress * (totalFrames - 1));
             const isVisible = currentFrame >= frameIn && currentFrame <= frameOut;
-            const wasVisible = step.dataset.visible === "true";
+            const wasVisible = step.getAttribute('data-visible') === 'true';
 
             if (isVisible && !wasVisible) {
               // Gather: particles come together
-              step.dataset.visible = "true";
-              step.style.opacity = "1";
-              step.classList.remove("dust-scatter");
-              step.classList.add("dust-gather");
+              step.setAttribute('data-visible', 'true');
+              step.classList.remove('opacity-0', 'dust-scatter');
+              step.style.opacity = '1';
+              step.classList.add('dust-gather');
             } else if (!isVisible && wasVisible) {
               // Scatter: particles fly apart
-              step.dataset.visible = "false";
-              step.classList.remove("dust-gather");
-              step.classList.add("dust-scatter");
+              step.setAttribute('data-visible', 'false');
+              step.classList.remove('dust-gather');
+              step.classList.add('dust-scatter');
               setTimeout(() => {
-                if (step.dataset.visible === "false") step.style.opacity = "0";
-              }, 600);
+                if (step.getAttribute('data-visible') === 'false') {
+                  step.style.opacity = '0';
+                }
+              }, 650);
             }
           },
         });
@@ -310,7 +312,7 @@ function Index() {
                 <i className="bx bx-coffee text-[24px]"></i>
               </div>
               <span className="text-xl font-bold tracking-tight text-foreground" style={{ fontFamily: "'Alexandria', sans-serif" }}>
-                مبروع
+                رشفه
               </span>
             </a>
 
@@ -435,7 +437,8 @@ function Index() {
             ].map((step, idx) => (
               <div
                 key={idx}
-                className="hero-step absolute inset-0 opacity-0 flex flex-col items-center justify-center text-center px-6"
+                className="hero-step absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+                style={{ opacity: 0 }}
                 data-frame-in={step.frames[0]}
                 data-frame-out={step.frames[1]}
               >
