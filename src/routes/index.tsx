@@ -287,6 +287,34 @@ function Index() {
           });
         },
       });
+
+      // 7. Cafe Split Section Animation (Image from right, sequential text from left)
+      const cafeSection = document.querySelector('#about');
+      if (cafeSection) {
+        gsap.from('.cafe-img', {
+          scrollTrigger: {
+            trigger: cafeSection,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+          xPercent: 100,
+          duration: 1.2,
+          ease: 'power3.out',
+        });
+
+        gsap.from(['.cafe-title', '.cafe-desc', '.cafe-btn'], {
+          scrollTrigger: {
+            trigger: cafeSection,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+          x: -100,
+          opacity: 0,
+          duration: 0.9,
+          stagger: 0.25,
+          ease: 'power3.out',
+        });
+      }
     },
     { dependencies: [framesReady] }
   );
@@ -306,11 +334,10 @@ function Index() {
         <nav className="mx-auto w-full max-w-7xl px-6 py-5">
           <div className="flex items-center justify-between rounded-2xl border border-border/50 bg-background/80 px-6 py-3.5 shadow-sm backdrop-blur-md">
             {/* Logo */}
-            <a href="#home" className="flex items-center gap-2.5 group">
-              <img src="/logo.png" alt="رشفه" className="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
-              <span className="text-xl font-bold tracking-tight text-foreground" style={{ fontFamily: "'Alexandria', sans-serif" }}>
-                رشفه
-              </span>
+            <a href="#home" className="flex items-center group">
+              <div className="h-10 w-10 rounded-full overflow-hidden border border-border/50 p-0.5 shadow-sm transition-transform group-hover:scale-105 bg-background">
+                <img src="/logo.png" alt="رشفه" className="h-full w-full object-cover rounded-full" />
+              </div>
             </a>
 
             {/* Desktop nav */}
@@ -505,22 +532,22 @@ function Index() {
       </section>
 
       {/* ── Cafe Split ──────────────────────────────────────────────────────── */}
-      <section className="bg-[#f2ece4] flex flex-col md:flex-row">
+      <section id="about" className="bg-[#f2ece4] flex flex-col md:flex-row overflow-hidden">
         {/* Left Side (Text) */}
         <div className="flex-1 flex flex-col justify-center px-12 py-20 md:px-24">
-           <h2 className="text-4xl md:text-5xl font-bold text-[#150605] leading-snug" style={{ fontFamily: "'Qahwa', sans-serif" }}>
+           <h2 className="cafe-title text-4xl md:text-5xl font-bold text-[#150605] leading-snug" style={{ fontFamily: "'Qahwa', sans-serif" }}>
              كل كوب<br />مُعد بشغف
            </h2>
-           <p className="mt-6 text-lg text-[#150605]/70 leading-relaxed max-w-md">
+           <p className="cafe-desc mt-6 text-lg text-[#150605]/70 leading-relaxed max-w-md">
              نحن نؤمن بأن القهوة ليست مجرد مشروب، بل هي تجربة. في مقهانا، نجمع بين أجود أنواع الحبوب المستدامة وأمهر صُناع القهوة لنقدم لك لحظة استثنائية في كل رشفة.
            </p>
-           <a href="#about" className="mt-8 inline-flex items-center gap-2 border border-[#150605] text-[#150605] px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-[#150605] hover:text-[#ebd9c8] transition-colors w-fit">
+           <a href="#about" className="cafe-btn mt-8 inline-flex items-center gap-2 border border-[#150605] text-[#150605] px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-[#150605] hover:text-[#ebd9c8] transition-colors w-fit">
              اكتشف قصتنا <i className="bx bx-chevron-left text-[18px]"></i>
            </a>
         </div>
         {/* Right Side (Image) */}
-        <div className="flex-1">
-           <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=800&auto=format&fit=crop" alt="تحضير القهوة" className="w-full h-full object-cover min-h-[500px]" />
+        <div className="flex-1 overflow-hidden">
+           <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=800&auto=format&fit=crop" alt="تحضير القهوة" className="cafe-img w-full h-full object-cover min-h-[500px]" />
         </div>
       </section>
 

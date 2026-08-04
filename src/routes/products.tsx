@@ -35,9 +35,10 @@ function ProductsPage() {
       {/* Header */}
       <header className="py-6 border-b border-[#ebd9c8]/10 bg-[#150605]/80 backdrop-blur-md sticky top-0 z-40">
         <div className="mx-auto max-w-7xl px-8 flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <img src="/logo.png" alt="رشفه" className="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
-            <span className="text-xl font-bold text-[#ebd9c8]" style={{ fontFamily: "'Alexandria', sans-serif" }}>رشفه</span>
+          <Link to="/" className="flex items-center group">
+            <div className="h-10 w-10 rounded-full overflow-hidden border border-[#ebd9c8]/30 p-0.5 shadow-sm transition-transform group-hover:scale-105 bg-[#150605]">
+              <img src="/logo.png" alt="رشفه" className="h-full w-full object-cover rounded-full" />
+            </div>
           </Link>
           <Link to="/" className="text-sm font-bold flex items-center gap-1 hover:text-white transition-colors">
             <i className="bx bx-right-arrow-alt text-lg"></i> العودة للرئيسية
