@@ -2,24 +2,133 @@
 @source "../src";
 @import "tw-animate-css";
 
+/* ── Alexandria Font Family ─────────────────────────────────── */
 @font-face {
-  font-family: "Qahwa";
-  src: url("/Qahwa-Arabic.otf.ttf") format("truetype");
-  font-weight: 100 900;
+  font-family: "Alexandria";
+  src: url("/fonts/Alexandria-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alexandria";
+  src: url("/fonts/Alexandria-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alexandria";
+  src: url("/fonts/Alexandria-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alexandria";
+  src: url("/fonts/Alexandria-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alexandria";
+  src: url("/fonts/Alexandria-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alexandria";
+  src: url("/fonts/Alexandria-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alexandria";
+  src: url("/fonts/Alexandria-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alexandria";
+  src: url("/fonts/Alexandria-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alexandria";
+  src: url("/fonts/Alexandria-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── IBM Plex Sans Arabic Font Family ──────────────────────── */
+@font-face {
+  font-family: "IBMPlexArabic";
+  src: url("/fonts/IBMPlexSansArabic-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBMPlexArabic";
+  src: url("/fonts/IBMPlexSansArabic-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBMPlexArabic";
+  src: url("/fonts/IBMPlexSansArabic-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBMPlexArabic";
+  src: url("/fonts/IBMPlexSansArabic-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBMPlexArabic";
+  src: url("/fonts/IBMPlexSansArabic-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBMPlexArabic";
+  src: url("/fonts/IBMPlexSansArabic-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBMPlexArabic";
+  src: url("/fonts/IBMPlexSansArabic-Bold.ttf") format("truetype");
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 body {
-  font-family: "Qahwa", "Tajawal", system-ui, -apple-system, sans-serif;
+  font-family: "IBMPlexArabic", system-ui, -apple-system, sans-serif;
 }
 
 h1,
 h2,
 h3,
 .font-display {
-  font-family: "Qahwa", "Tajawal", Georgia, serif;
+  font-family: "Alexandria", "IBMPlexArabic", system-ui, sans-serif;
 }
+
 
 @custom-variant dark (&:is(.dark *));
 
@@ -143,4 +252,98 @@ h3,
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* ── Dust Particle Animations ──────────────────────────────────────────── */
+
+/* Gather: particles coalesce into text */
+@keyframes dustGatherTitle {
+  0% {
+    opacity: 0;
+    filter: blur(24px);
+    letter-spacing: 0.5em;
+    transform: scale(1.15) translateY(30px);
+  }
+  60% {
+    opacity: 0.85;
+    filter: blur(4px);
+    letter-spacing: 0.05em;
+    transform: scale(1.02) translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    letter-spacing: normal;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes dustGatherSub {
+  0% {
+    opacity: 0;
+    filter: blur(16px);
+    letter-spacing: 0.3em;
+    transform: translateY(20px);
+  }
+  70% {
+    opacity: 0.7;
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    letter-spacing: normal;
+    transform: translateY(0);
+  }
+}
+
+/* Scatter: text dissolves into particles */
+@keyframes dustScatterTitle {
+  0% {
+    opacity: 1;
+    filter: blur(0px);
+    letter-spacing: normal;
+    transform: scale(1) translateY(0);
+  }
+  40% {
+    opacity: 0.7;
+    filter: blur(5px);
+    letter-spacing: 0.1em;
+    transform: scale(1.05) translateY(-8px);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(28px);
+    letter-spacing: 0.6em;
+    transform: scale(1.2) translateY(-40px);
+  }
+}
+
+@keyframes dustScatterSub {
+  0% {
+    opacity: 1;
+    filter: blur(0px);
+    letter-spacing: normal;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(18px);
+    letter-spacing: 0.4em;
+    transform: translateY(-24px);
+  }
+}
+
+.dust-gather .dust-text {
+  animation: dustGatherTitle 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+.dust-gather .dust-sub {
+  animation: dustGatherSub 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s forwards;
+}
+
+.dust-scatter .dust-text {
+  animation: dustScatterTitle 0.6s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
+}
+.dust-scatter .dust-sub {
+  animation: dustScatterSub 0.5s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
 }

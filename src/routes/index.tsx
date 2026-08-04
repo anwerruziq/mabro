@@ -20,9 +20,9 @@ const LOADER_VIDEO_URL = "/motion-graphics.mp4";
 export const Route = createFileRoute("/")(  {
   head: () => ({
     meta: [
-      { title: "مبروع — قهوة متخصصة" },
+      { title: "رشفه" },
       { name: "description", content: "قهوة متخصصة تُصنع بشغف. حبوب من أجود المصادر، محمّصة بخبرة، مقدّمة باهتمام." },
-      { property: "og:title", content: "مبروع — قهوة متخصصة" },
+      { property: "og:title", content: "رشفه" },
       { property: "og:description", content: "قهوة متخصصة تُصنع بشغف. كل رشفة تحكي قصة." },
     ],
     links: [],
@@ -235,32 +235,63 @@ function Index() {
         }
       });
 
-      // 5. Hero text & steps timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1.5,
-        },
-      });
-
+      // 5. Intro headline fade out
       if (textRef.current) {
-        tl.to(textRef.current, { y: -150, opacity: 0, duration: 1, ease: "none" });
+        gsap.to(textRef.current, {
+          y: -80,
+          opacity: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: `${(70 / frameCount) * 100}% bottom`,
+            scrub: 1,
+          },
+        });
       }
 
-      gsap.utils.toArray('.hero-step').forEach((step: any) => {
-        tl.fromTo(step, { y: 150, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "none" })
-          .to(step, { y: -150, opacity: 0, duration: 1, ease: "none" });
-      });
+      // 6. Hero steps — frame-synced dust particle effect
+      const steps = gsap.utils.toArray('.hero-step') as HTMLElement[];
+      steps.forEach((step) => {
+        const frameIn = parseInt(step.dataset.frameIn || "0");
+        const frameOut = parseInt(step.dataset.frameOut || "0");
+        const totalFrames = frameCount;
 
-      // Headline is now visible by default on the first frame and fades out via the timeline above
+        // Use ScrollTrigger onUpdate to show/hide based on current frame
+        ScrollTrigger.create({
+          trigger: heroRef.current!,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+          onUpdate: (self) => {
+            const currentFrame = Math.round(self.progress * (totalFrames - 1));
+            const isVisible = currentFrame >= frameIn && currentFrame <= frameOut;
+            const wasVisible = step.dataset.visible === "true";
+
+            if (isVisible && !wasVisible) {
+              // Gather: particles come together
+              step.dataset.visible = "true";
+              step.style.opacity = "1";
+              step.classList.remove("dust-scatter");
+              step.classList.add("dust-gather");
+            } else if (!isVisible && wasVisible) {
+              // Scatter: particles fly apart
+              step.dataset.visible = "false";
+              step.classList.remove("dust-gather");
+              step.classList.add("dust-scatter");
+              setTimeout(() => {
+                if (step.dataset.visible === "false") step.style.opacity = "0";
+              }, 600);
+            }
+          },
+        });
+      });
     },
     { dependencies: [framesReady] }
   );
 
   return (
-    <div dir="rtl" className="relative min-h-screen bg-background" style={{ fontFamily: "'Qahwa', sans-serif" }}>
+    <div dir="rtl" className="relative min-h-screen bg-background" style={{ fontFamily: "'IBMPlexArabic', sans-serif" }}>
       {/* ── Dynamic Lighting ─────────────────────────────────────────────── */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div
@@ -278,7 +309,7 @@ function Index() {
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
                 <i className="bx bx-coffee text-[24px]"></i>
               </div>
-              <span className="text-xl font-bold tracking-tight text-foreground" style={{ fontFamily: "'Qahwa', sans-serif" }}>
+              <span className="text-xl font-bold tracking-tight text-foreground" style={{ fontFamily: "'Alexandria', sans-serif" }}>
                 مبروع
               </span>
             </a>
@@ -352,18 +383,13 @@ function Index() {
 
           {/* Overlays removed for clearer frames */}
 
-          {/* Intro headline — fades out as you scroll down */}
+          {/* Intro headline */}
           <div
             id="hero-headline"
             ref={textRef}
             className="relative z-10 flex h-full flex-col items-center justify-center px-6 pt-20 text-center will-change-transform"
           >
-            <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold tracking-widest text-white/80 uppercase backdrop-blur-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
-              قهوة متخصصة · منذ ٢٠١٨
-            </span>
-
-            <h1 className="leading-tight text-white drop-shadow-lg" style={{ fontFamily: "'Qahwa', sans-serif" }}>
+            <h1 className="leading-tight text-white drop-shadow-lg" style={{ fontFamily: "'Alexandria', sans-serif" }}>
               <span className="block text-6xl font-light md:text-7xl lg:text-8xl opacity-90">
                 كل
               </span>
@@ -372,54 +398,61 @@ function Index() {
               </span>
             </h1>
 
-            <p className="mt-6 mb-8 max-w-xl text-lg text-white/75 font-light leading-relaxed">
-              حبوب أصيلة من أجود المصادر، محمّصة بخبرة، وتُقدَّم باهتمام —<br className="hidden md:block" />
-              كوبك المثالي بانتظارك.
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <a
-                href="#menu"
-                className="rounded-full bg-primary px-7 py-3 font-medium text-primary-foreground shadow-lg transition-all hover:opacity-90 hover:shadow-xl hover:-translate-y-0.5"
-              >
-                استكشف القائمة
-              </a>
-              <a
-                href="#story"
-                className="rounded-full border border-white/30 bg-white/10 px-7 py-3 font-medium text-white backdrop-blur-sm transition-all hover:bg-white/20"
-              >
-                قصتنا
-              </a>
-            </div>
-
             <div className="mt-16 flex animate-bounce items-center gap-2 text-sm text-white/50">
               <span>مرّر للاستكشاف</span>
               <i className="bx bx-chevron-down text-[22px]"></i>
             </div>
           </div>
 
-          {/* Scrolling Steps */}
-          <div className="absolute inset-0 pointer-events-none z-20" style={{ fontFamily: "'Qahwa', sans-serif" }}>
-            <div className="hero-step absolute inset-0 opacity-0 flex flex-col items-start justify-center text-right px-10 md:px-32">
-              <i className="bx bx-leaf text-6xl text-[#ebd9c8] mb-6 drop-shadow-md"></i>
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">مصادر مستدامة</h2>
-              <p className="text-xl md:text-2xl text-white/80 max-w-lg drop-shadow-md">نهتم بالناس والكوكب الذي نزرع فيه.</p>
-            </div>
-            <div className="hero-step absolute inset-0 opacity-0 flex flex-col items-center justify-center text-center px-6">
-              <i className="bx bxs-flame text-6xl text-[#ebd9c8] mb-6 drop-shadow-md"></i>
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">تحميص خبير</h2>
-              <p className="text-xl md:text-2xl text-white/80 max-w-2xl drop-shadow-md">تُحمّص للوصول إلى النكهة والعبق المثاليين.</p>
-            </div>
-            <div className="hero-step absolute inset-0 opacity-0 flex flex-col items-center justify-center text-center px-6">
-              <i className="bx bx-coffee-togo text-6xl text-[#ebd9c8] mb-6 drop-shadow-md"></i>
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">تجربة مثالية</h2>
-              <p className="text-xl md:text-2xl text-white/80 max-w-2xl drop-shadow-md">من المقهى إلى كوبك، تجربة استثنائية دائماً.</p>
-            </div>
-            <div className="hero-step absolute inset-0 opacity-0 flex flex-col items-center justify-center text-center px-6">
-              <i className="bx bx-star text-6xl text-[#ebd9c8] mb-6 drop-shadow-md"></i>
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">جودة فاخرة</h2>
-              <p className="text-xl md:text-2xl text-white/80 max-w-2xl drop-shadow-md">نستورد أجود حبوب القهوة من جميع أنحاء العالم.</p>
-            </div>
+          {/* Scrolling Steps — dust particle animation synced to frames */}
+          <div className="absolute inset-0 pointer-events-none z-20" style={{ fontFamily: "'Alexandria', sans-serif" }}>
+            {[
+              {
+                title: "منبع النكهة",
+                sub: "أجود حبوب البن المختارة بعناية",
+                frames: [72, 158],
+              },
+              {
+                title: "وهج التحميص",
+                sub: "تحميص متقن يمنح النكهة عمقها",
+                frames: [189, 283],
+              },
+              {
+                title: "دقة الطحن",
+                sub: "طحن مثالي لاستخلاص متوازن",
+                frames: [310, 370],
+              },
+              {
+                title: "فن الاستخلاص",
+                sub: "كل قطرة تُحضَّر باتقان",
+                frames: [395, 486],
+              },
+              {
+                title: "تجربة لا تنسى",
+                sub: "نكهة أصيلة تبقى في الذاكرة",
+                frames: [505, 611],
+              },
+            ].map((step, idx) => (
+              <div
+                key={idx}
+                className="hero-step absolute inset-0 opacity-0 flex flex-col items-center justify-center text-center px-6"
+                data-frame-in={step.frames[0]}
+                data-frame-out={step.frames[1]}
+              >
+                <h2
+                  className="dust-text text-5xl md:text-7xl font-bold text-white mb-4 drop-shadow-lg"
+                  style={{ fontFamily: "'Alexandria', sans-serif" }}
+                >
+                  {step.title}
+                </h2>
+                <p
+                  className="dust-sub text-xl md:text-2xl text-white/70 max-w-xl drop-shadow-md font-light"
+                  style={{ fontFamily: "'IBMPlexArabic', sans-serif" }}
+                >
+                  {step.sub}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
