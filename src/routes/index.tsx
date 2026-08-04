@@ -255,13 +255,13 @@ function Index() {
         onUpdate: (self) => {
           const currentFrame = Math.round(self.progress * (frameCount - 1));
 
-          // Headline: scatter when past frame 30, gather when before
+          // Headline: scatter when past frame 10, gather when before
           if (headline) {
-            if (currentFrame >= 30 && headlineVisible) {
+            if (currentFrame >= 10 && headlineVisible) {
               headlineVisible = false;
               headline.classList.remove('dust-gather');
               headline.classList.add('dust-scatter-out');
-            } else if (currentFrame < 30 && !headlineVisible) {
+            } else if (currentFrame < 10 && !headlineVisible) {
               headlineVisible = true;
               headline.classList.remove('dust-scatter-out');
               headline.classList.add('dust-gather');
@@ -390,7 +390,7 @@ function Index() {
             ref={textRef}
             className="dust-gather relative z-10 flex h-full flex-col items-center justify-center px-6 pt-20 text-center will-change-transform"
           >
-            <h1 className="leading-tight text-white drop-shadow-lg" style={{ fontFamily: "'Alexandria', sans-serif" }}>
+            <h1 className="leading-tight text-white drop-shadow-lg" style={{ fontFamily: "'Damavand', sans-serif" }}>
               <span className="dust-text block text-6xl font-light md:text-7xl lg:text-8xl opacity-90">
                 كل
               </span>
@@ -411,31 +411,31 @@ function Index() {
               {
                 title: "منبع النكهة",
                 sub: "أجود حبوب البن المختارة بعناية",
-                frames: [50, 150],
+                frames: [25, 110],
                 pos: "bottom-16 right-10 md:right-24 text-right items-end",
               },
               {
                 title: "وهج التحميص",
                 sub: "تحميص متقن يمنح النكهة عمقها",
-                frames: [165, 265],
+                frames: [130, 240],
                 pos: "bottom-16 left-10 md:left-24 text-left items-start",
               },
               {
                 title: "دقة الطحن",
                 sub: "طحن مثالي لاستخلاص متوازن",
-                frames: [280, 380],
+                frames: [260, 370],
                 pos: "bottom-16 right-10 md:right-24 text-right items-end",
               },
               {
                 title: "فن الاستخلاص",
                 sub: "كل قطرة تُحضَّر باتقان",
-                frames: [395, 495],
+                frames: [390, 500],
                 pos: "bottom-16 left-10 md:left-24 text-left items-start",
               },
               {
                 title: "تجربة لا تنسى",
                 sub: "نكهة أصيلة تبقى في الذاكرة",
-                frames: [510, 610],
+                frames: [520, 610],
                 pos: "inset-x-0 bottom-16 text-center items-center",
               },
             ].map((step, idx) => (

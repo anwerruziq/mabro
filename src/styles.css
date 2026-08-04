@@ -11,6 +11,16 @@
   font-display: swap;
 }
 
+/* ── Damavand Font (intro headline) ─────────────────────────── */
+@font-face {
+  font-family: "Damavand";
+  src: url("/Damavand-Heavy.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+
 /* ── Alexandria Font Family ─────────────────────────────────── */
 @font-face {
   font-family: "Alexandria";
