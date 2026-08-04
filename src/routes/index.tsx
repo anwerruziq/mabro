@@ -565,7 +565,7 @@ function Index() {
             </h2>
           </div>
           
-          <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-3 md:gap-8 pb-4 md:pb-0 snap-x snap-mandatory hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8">
             {[
               {
                 id: 1,
@@ -592,19 +592,19 @@ function Index() {
                 img: "https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?q=80&w=600&auto=format&fit=crop",
               }
             ].map((product) => (
-              <div key={product.id} className="min-w-[58vw] sm:min-w-[42vw] md:min-w-0 shrink-0 snap-center group rounded-xl md:rounded-2xl border border-[#ebd9c8]/10 bg-[#ebd9c8]/5 overflow-hidden transition-all hover:border-[#ebd9c8]/30 hover:bg-[#ebd9c8]/10">
-                <div className="aspect-[3/2] md:aspect-[4/3] relative overflow-hidden">
+              <div key={product.id} className="group rounded-xl border border-[#ebd9c8]/10 bg-[#ebd9c8]/5 overflow-hidden transition-all hover:border-[#ebd9c8]/30 hover:bg-[#ebd9c8]/10 col-span-1 md:col-span-1 last:max-md:col-span-2">
+                <div className="aspect-video md:aspect-[4/3] relative overflow-hidden">
                   <img src={product.img} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#150605] via-transparent to-transparent opacity-60"></div>
                 </div>
-                <div className="p-3 md:p-6 text-center">
-                  <h3 className="text-sm md:text-lg font-bold text-[#ebd9c8] mb-0.5 md:mb-1 truncate">{product.name}</h3>
-                  <p className="text-[10px] md:text-sm text-[#ebd9c8]/60 mb-2 md:mb-4 line-clamp-1">{product.notes}</p>
-                  <div className="flex items-center justify-between pt-2 md:mt-4 md:pt-4 border-t border-[#ebd9c8]/10">
-                    <span className="text-[9px] md:text-xs bg-[#ebd9c8]/10 text-[#ebd9c8] px-2 md:px-3 py-0.5 md:py-1 rounded-full truncate max-w-[50%]">{product.roast}</span>
+                <div className="p-3 md:p-6 text-right md:text-center">
+                  <h3 className="text-xs md:text-lg font-bold text-[#ebd9c8] leading-tight">{product.name}</h3>
+                  <p className="text-[10px] md:text-sm text-[#ebd9c8]/60 mt-1 line-clamp-2 md:mb-4">{product.notes}</p>
+                  <div className="flex items-center justify-between mt-2 md:mt-4 pt-2 md:pt-4 border-t border-[#ebd9c8]/10">
+                    <span className="text-[9px] md:text-xs bg-[#ebd9c8]/10 text-[#ebd9c8] px-2 py-0.5 rounded-full">{product.roast}</span>
                     <span className="text-xs md:text-base font-bold text-[#ebd9c8]">{product.price}</span>
                   </div>
-                  <button className="w-full mt-3 md:mt-6 bg-[#ebd9c8] text-[#150605] py-1.5 md:py-2.5 rounded-full text-xs md:text-sm font-bold transition-transform hover:scale-[1.02]">
+                  <button className="w-full mt-2 md:mt-6 bg-[#ebd9c8] text-[#150605] py-1.5 md:py-2.5 rounded-full text-[10px] md:text-sm font-bold transition-transform hover:scale-[1.02]">
                     أضف للسلة
                   </button>
                 </div>
