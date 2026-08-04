@@ -390,9 +390,7 @@ function Index() {
             style={{ display: "block" }}
           />
 
-          {/* Warm gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/65" />
-          <div className="absolute inset-0 bg-gradient-to-l from-black/20 to-transparent" />
+          {/* Overlays removed for clearer frames */}
 
           {/* Intro headline — fades in over the sequence */}
           <div
