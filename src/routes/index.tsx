@@ -624,17 +624,19 @@ function Index() {
             {/* Brand & Socials */}
             <div className="flex flex-col items-center md:items-start text-center md:text-right">
               <a href="#home" className="flex items-center gap-2.5 mb-6 group">
-                <img src="/logo.png" alt="رشفه" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+                <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-[#ebd9c8]/20 p-0.5 shadow-sm transition-transform group-hover:scale-105 bg-[#150605]">
+                  <img src="/logo.png" alt="رشفه" className="h-full w-full object-cover rounded-full" />
+                </div>
                 <span className="text-2xl font-bold text-[#ebd9c8]" style={{ fontFamily: "'Qahwa', sans-serif" }}>رشفه</span>
               </a>
               <div className="flex gap-4">
-                <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full border border-[#ebd9c8]/20 text-[#ebd9c8]/60 transition-colors hover:border-[#ebd9c8] hover:text-[#ebd9c8]">
+                <a href="https://www.instagram.com/coffee_rashfah_?igsh=amtrb3R1NzFpcXR3" target="_blank" rel="noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full border border-[#ebd9c8]/20 text-[#ebd9c8]/60 transition-colors hover:border-[#ebd9c8] hover:text-[#ebd9c8]">
                   <i className="bx bxl-instagram text-[20px]"></i>
                 </a>
                 <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full border border-[#ebd9c8]/20 text-[#ebd9c8]/60 transition-colors hover:border-[#ebd9c8] hover:text-[#ebd9c8]">
                   <i className="bx bxl-twitter text-[20px]"></i>
                 </a>
-                <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full border border-[#ebd9c8]/20 text-[#ebd9c8]/60 transition-colors hover:border-[#ebd9c8] hover:text-[#ebd9c8]">
+                <a href="https://www.facebook.com/share/197isNj5hj/" target="_blank" rel="noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full border border-[#ebd9c8]/20 text-[#ebd9c8]/60 transition-colors hover:border-[#ebd9c8] hover:text-[#ebd9c8]">
                   <i className="bx bxl-facebook text-[20px]"></i>
                 </a>
               </div>
