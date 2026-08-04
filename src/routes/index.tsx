@@ -307,9 +307,7 @@ function Index() {
           <div className="flex items-center justify-between rounded-2xl border border-border/50 bg-background/80 px-6 py-3.5 shadow-sm backdrop-blur-md">
             {/* Logo */}
             <a href="#home" className="flex items-center gap-2.5 group">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
-                <i className="bx bx-coffee text-[24px]"></i>
-              </div>
+              <img src="/logo.png" alt="رشفه" className="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
               <span className="text-xl font-bold tracking-tight text-foreground" style={{ fontFamily: "'Alexandria', sans-serif" }}>
                 رشفه
               </span>
@@ -556,7 +554,7 @@ function Index() {
               },
               {
                 id: 3,
-                name: "مزيج مبروع",
+                name: "مزيج رشفة الخاص",
                 notes: "بندق، عسل، كاكاو",
                 roast: "متوسط إلى غامق",
                 price: "٨٠ ريال",
@@ -598,9 +596,9 @@ function Index() {
             
             {/* Brand & Socials */}
             <div className="flex flex-col items-center md:items-start text-center md:text-right">
-              <a href="#home" className="flex items-center gap-2 mb-6">
-                <i className="bx bxs-coffee-bean text-[32px] text-[#ebd9c8]"></i>
-                <span className="text-2xl font-bold text-[#ebd9c8]" style={{ fontFamily: "'Qahwa', sans-serif" }}>مبروع</span>
+              <a href="#home" className="flex items-center gap-2.5 mb-6 group">
+                <img src="/logo.png" alt="رشفه" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+                <span className="text-2xl font-bold text-[#ebd9c8]" style={{ fontFamily: "'Qahwa', sans-serif" }}>رشفه</span>
               </a>
               <div className="flex gap-4">
                 <a href="#" className="flex h-10 w-10 items-center justify-center rounded-full border border-[#ebd9c8]/20 text-[#ebd9c8]/60 transition-colors hover:border-[#ebd9c8] hover:text-[#ebd9c8]">
@@ -619,7 +617,7 @@ function Index() {
             <div className="flex gap-16 text-center md:text-right">
               {[
                 { title: "المتجر", links: ["القهوة", "المعدات", "الاشتراكات", "الهدايا"] },
-                { title: "عن مبروع", links: ["قصتنا", "المصادر", "الوظائف", "تواصل معنا"] },
+                { title: "عن رشفه", links: ["قصتنا", "المصادر", "الوظائف", "تواصل معنا"] },
               ].map((col) => (
                 <div key={col.title}>
                   <h4 className="text-[11px] font-bold tracking-widest text-[#ebd9c8] uppercase mb-6">{col.title}</h4>
@@ -636,7 +634,7 @@ function Index() {
           </div>
 
           <div className="mt-8 flex flex-col items-center justify-between gap-4 text-[#ebd9c8]/40 md:flex-row text-xs">
-            <p>© {new Date().getFullYear()} مبروع للقهوة. جميع الحقوق محفوظة.</p>
+            <p>© {new Date().getFullYear()} رشفه للقهوة. جميع الحقوق محفوظة.</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-[#ebd9c8] transition-colors">سياسة الخصوصية</a>
               <a href="#" className="hover:text-[#ebd9c8] transition-colors">شروط الخدمة</a>
