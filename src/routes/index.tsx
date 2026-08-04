@@ -430,26 +430,26 @@ function Index() {
           </div>
 
           {/* Scrolling Steps */}
-          <div className="absolute inset-0 pointer-events-none z-20 flex flex-col items-center justify-center text-center px-6" style={{ fontFamily: "'Qahwa', sans-serif" }}>
-            <div className="hero-step absolute opacity-0 flex flex-col items-center justify-center">
-              <i className="bx bx-star text-6xl text-[#ebd9c8] mb-6 drop-shadow-md"></i>
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">جودة فاخرة</h2>
-              <p className="text-xl md:text-2xl text-white/80 max-w-2xl drop-shadow-md">نستورد أجود حبوب القهوة من جميع أنحاء العالم.</p>
+          <div className="absolute inset-0 pointer-events-none z-20" style={{ fontFamily: "'Qahwa', sans-serif" }}>
+            <div className="hero-step absolute inset-0 opacity-0 flex flex-col items-start justify-center text-right px-10 md:px-32">
+              <i className="bx bx-leaf text-6xl text-[#ebd9c8] mb-6 drop-shadow-md"></i>
+              <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">مصادر مستدامة</h2>
+              <p className="text-xl md:text-2xl text-white/80 max-w-lg drop-shadow-md">نهتم بالناس والكوكب الذي نزرع فيه.</p>
             </div>
-            <div className="hero-step absolute opacity-0 flex flex-col items-center justify-center">
+            <div className="hero-step absolute inset-0 opacity-0 flex flex-col items-center justify-center text-center px-6">
               <i className="bx bxs-flame text-6xl text-[#ebd9c8] mb-6 drop-shadow-md"></i>
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">تحميص خبير</h2>
               <p className="text-xl md:text-2xl text-white/80 max-w-2xl drop-shadow-md">تُحمّص للوصول إلى النكهة والعبق المثاليين.</p>
             </div>
-            <div className="hero-step absolute opacity-0 flex flex-col items-center justify-center">
+            <div className="hero-step absolute inset-0 opacity-0 flex flex-col items-center justify-center text-center px-6">
               <i className="bx bx-coffee-togo text-6xl text-[#ebd9c8] mb-6 drop-shadow-md"></i>
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">تجربة مثالية</h2>
               <p className="text-xl md:text-2xl text-white/80 max-w-2xl drop-shadow-md">من المقهى إلى كوبك، تجربة استثنائية دائماً.</p>
             </div>
-            <div className="hero-step absolute opacity-0 flex flex-col items-center justify-center">
-              <i className="bx bx-leaf text-6xl text-[#ebd9c8] mb-6 drop-shadow-md"></i>
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">مصادر مستدامة</h2>
-              <p className="text-xl md:text-2xl text-white/80 max-w-2xl drop-shadow-md">نهتم بالناس والكوكب الذي نزرع فيه.</p>
+            <div className="hero-step absolute inset-0 opacity-0 flex flex-col items-center justify-center text-center px-6">
+              <i className="bx bx-star text-6xl text-[#ebd9c8] mb-6 drop-shadow-md"></i>
+              <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">جودة فاخرة</h2>
+              <p className="text-xl md:text-2xl text-white/80 max-w-2xl drop-shadow-md">نستورد أجود حبوب القهوة من جميع أنحاء العالم.</p>
             </div>
           </div>
         </div>
