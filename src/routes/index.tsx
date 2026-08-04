@@ -483,10 +483,10 @@ function Index() {
           {/* Cards Side */}
           <div className="lg:w-2/3 grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { img: "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?q=80&w=400&auto=format&fit=crop", title: "قهوة على الرمل", desc: "أصالة. طعم عريق. مطبوخة بعناية.", price: "١٥ ريال" },
-              { img: "https://images.unsplash.com/photo-1589396575653-c09c794ff6a6?q=80&w=400&auto=format&fit=crop", title: "قهوة عربية", desc: "هيل زكي. زعفران. أصالة الضيافة.", price: "١٨ ريال" },
-              { img: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?q=80&w=400&auto=format&fit=crop", title: "إسبريسو", desc: "مركز. قوام غني. نكهة قوية.", price: "١٢ ريال" },
-              { img: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?q=80&w=400&auto=format&fit=crop", title: "قهوة سادة", desc: "تقطير مثالي. إيحاءات متوازنة.", price: "١٤ ريال" },
+              { img: "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=600&auto=format&fit=crop", title: "قهوة على الرمل", desc: "أصالة. طعم عريق. مطبوخة بعناية.", price: "١٥ ريال" },
+              { img: "https://images.unsplash.com/photo-1579992357154-faf4bde95b3d?q=80&w=600&auto=format&fit=crop", title: "قهوة عربية", desc: "هيل زكي. زعفران. أصالة الضيافة.", price: "١٨ ريال" },
+              { img: "https://images.unsplash.com/photo-1610889556528-9a770e32642f?q=80&w=600&auto=format&fit=crop", title: "إسبريسو", desc: "مركز. قوام غني. نكهة قوية.", price: "١٢ ريال" },
+              { img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=600&auto=format&fit=crop", title: "قهوة سادة", desc: "تقطير مثالي. إيحاءات متوازنة.", price: "١٤ ريال" },
             ].map((item, i) => (
               <div key={item.title} className="group rounded-sm border border-border/20 bg-[#280d0a]/50 overflow-hidden hover:border-[#ebd9c8]/30 transition-colors">
                 <div className="aspect-[4/5] overflow-hidden relative">
