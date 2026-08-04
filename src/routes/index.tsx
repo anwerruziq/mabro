@@ -9,11 +9,9 @@ if (typeof window !== "undefined") {
 }
 
 // ─── Frame Sequence Config ─────────────────────────────────────────────────
-const FRAME_NAMES = Array.from({ length: 209 }, (_, i) => {
+const FRAME_NAMES = Array.from({ length: 626 }, (_, i) => {
   const num = String(i + 1).padStart(4, "0");
-  const sec = Math.floor(i / 10);
-  const ms = (i % 10) * 10;
-  return `/frame/frames-extractor-${num}-${sec}-${String(ms).padStart(2, "0")}.jpg`;
+  return `/frame 2/${num}.jpg`;
 });
 
 // ─── Loading screen video ──────────────────────────────────────────────────
@@ -206,10 +204,10 @@ function Index() {
           trigger: heroRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1.5,
+          scrub: window.innerWidth < 768 ? 0.5 : 1.5,
         },
         onUpdate: () => {
-          requestAnimationFrame(() => drawFrame(Math.round(frameIndexRef.current.value)));
+          drawFrame(Math.round(frameIndexRef.current.value));
         }
       });
 
