@@ -137,6 +137,9 @@
   font-display: swap;
 }
 
+html {
+  scroll-behavior: smooth;
+}
 body {
   font-family: "IBMPlexArabic", system-ui, -apple-system, sans-serif;
 }
@@ -411,4 +414,29 @@ h3,
 .dust-scatter-out .dust-sub {
   animation: dustScatterOutSub 0.5s cubic-bezier(0.55, 0.06, 0.68, 0.19) 0.05s forwards;
   pointer-events: none;
+}
+
+/* ── Mobile Smooth Scroll ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body {
+    overscroll-behavior-y: none;
+    touch-action: pan-y;
+  }
+
+  /* Smooth momentum scrolling for horizontal carousels */
+  .snap-x {
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+  }
+
+  /* Reduce hero section padding on mobile */
+  section {
+    -webkit-overflow-scrolling: touch;
+  }
 }

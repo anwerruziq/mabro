@@ -62,6 +62,7 @@ function VideoLoader({ exiting }: { exiting: boolean }) {
 
 function Index() {
   const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [framesReady, setFramesReady] = useState(false);
   const [loaderExiting, setLoaderExiting] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
@@ -502,9 +503,12 @@ function Index() {
             <p className="mt-6 text-sm leading-relaxed text-[#ebd9c8]/60">
               من الإسبريسو الجريء إلى اللاتيه الكريمي والحلويات اللذيذة، هناك شيء لكل محبي القهوة.
             </p>
-            <a href="#menu" className="mt-8 inline-flex items-center justify-center border border-[#ebd9c8]/30 px-6 py-3 text-xs font-semibold tracking-widest text-[#ebd9c8] uppercase hover:bg-[#ebd9c8] hover:text-[#1f0b0a] transition-colors rounded-sm">
-              عرض القائمة الكاملة
-            </a>
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="mt-8 inline-flex items-center gap-2 justify-center border border-[#ebd9c8]/30 px-6 py-3 text-xs font-semibold tracking-widest text-[#ebd9c8] uppercase hover:bg-[#ebd9c8] hover:text-[#1f0b0a] transition-colors rounded-sm"
+            >
+              عرض القائمة الكاملة <i className="bx bx-chevron-left text-base"></i>
+            </button>
           </div>
 
           {/* Cards Side */}
@@ -588,7 +592,7 @@ function Index() {
                 img: "https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?q=80&w=600&auto=format&fit=crop",
               }
             ].map((product) => (
-              <div key={product.id} className="min-w-[85vw] md:min-w-0 shrink-0 snap-center group rounded-2xl border border-[#ebd9c8]/10 bg-[#ebd9c8]/5 overflow-hidden transition-all hover:border-[#ebd9c8]/30 hover:bg-[#ebd9c8]/10">
+              <div key={product.id} className="min-w-[72vw] sm:min-w-[55vw] md:min-w-0 shrink-0 snap-center group rounded-2xl border border-[#ebd9c8]/10 bg-[#ebd9c8]/5 overflow-hidden transition-all hover:border-[#ebd9c8]/30 hover:bg-[#ebd9c8]/10">
                 <div className="aspect-[4/3] relative overflow-hidden">
                   <img src={product.img} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#150605] via-transparent to-transparent opacity-60"></div>
@@ -615,6 +619,88 @@ function Index() {
           </div>
         </div>
       </section>
+
+      {/* ── Full Menu Drawer ─────────────────────────────────────────────── */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-[200] flex"
+          dir="rtl"
+          onClick={() => setMenuOpen(false)}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+
+          {/* Drawer Panel */}
+          <div
+            className="relative mr-auto h-full w-full max-w-md bg-[#150605] shadow-2xl overflow-y-auto"
+            style={{ animation: "slideInRight 0.35s cubic-bezier(0.22,1,0.36,1) both" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-5 bg-[#150605]/95 backdrop-blur-md border-b border-[#ebd9c8]/10">
+              <h2 className="text-xl font-bold text-[#ebd9c8]" style={{ fontFamily: "'Qahwa', sans-serif" }}>قائمتنا الكاملة</h2>
+              <button onClick={() => setMenuOpen(false)} className="flex h-9 w-9 items-center justify-center rounded-full border border-[#ebd9c8]/20 text-[#ebd9c8]/70 hover:text-[#ebd9c8] hover:border-[#ebd9c8] transition-colors">
+                <i className="bx bx-x text-xl"></i>
+              </button>
+            </div>
+
+            {/* Menu Groups */}
+            <div className="px-6 pt-6 pb-12 space-y-10">
+              {[
+                {
+                  category: "☕ قهوة مختصة",
+                  items: [
+                    { name: "قهوة على الرمل", desc: "أصالة. طعم عريق. مطبوخة بعناية.", price: "١٥ ريال", img: "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=200&auto=format&fit=crop" },
+                    { name: "قهوة عربية", desc: "هيل زكي. زعفران. أصالة الضيافة.", price: "١٨ ريال", img: "https://images.unsplash.com/photo-1579992357154-faf4bde95b3d?q=80&w=200&auto=format&fit=crop" },
+                    { name: "إسبريسو", desc: "مركز. قوام غني. نكهة قوية.", price: "١٢ ريال", img: "https://images.unsplash.com/photo-1610889556528-9a770e32642f?q=80&w=200&auto=format&fit=crop" },
+                    { name: "قهوة سادة", desc: "تقطير مثالي. إيحاءات متوازنة.", price: "١٤ ريال", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=200&auto=format&fit=crop" },
+                  ]
+                },
+                {
+                  category: "🥛 مشروبات الحليب",
+                  items: [
+                    { name: "لاتيه كراميل", desc: "سلس. حلو. مثالي.", price: "٢٢ ريال", img: "https://images.unsplash.com/photo-1593443320739-77f74939d0da?q=80&w=200&auto=format&fit=crop" },
+                    { name: "فانيليا مثلج", desc: "بارد. كريمي. منعش.", price: "٢٤ ريال", img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?q=80&w=200&auto=format&fit=crop" },
+                    { name: "موكا بليس", desc: "غني. جريء. فاخر.", price: "٢٦ ريال", img: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?q=80&w=200&auto=format&fit=crop" },
+                  ]
+                },
+                {
+                  category: "🍰 المعجنات",
+                  items: [
+                    { name: "كعكة الشوكولاتة", desc: "هشة ولذيذة.", price: "١٨ ريال", img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=200&auto=format&fit=crop" },
+                    { name: "كرواسان لوز", desc: "هش من الخارج، ناعم من الداخل.", price: "١٦ ريال", img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=200&auto=format&fit=crop" },
+                  ]
+                },
+              ].map((group) => (
+                <div key={group.category}>
+                  <h3 className="text-xs font-bold tracking-widest text-[#ebd9c8]/50 uppercase mb-4">{group.category}</h3>
+                  <div className="space-y-3">
+                    {group.items.map((item) => (
+                      <div key={item.name} className="flex items-center gap-4 p-3 rounded-xl border border-[#ebd9c8]/8 bg-[#ebd9c8]/5 hover:bg-[#ebd9c8]/10 hover:border-[#ebd9c8]/20 transition-all cursor-pointer group">
+                        <div className="h-16 w-16 rounded-lg overflow-hidden flex-shrink-0">
+                          <img src={item.img} alt={item.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-[#ebd9c8] text-sm">{item.name}</p>
+                          <p className="text-[11px] text-[#ebd9c8]/50 mt-0.5 truncate">{item.desc}</p>
+                        </div>
+                        <span className="text-sm font-bold text-[#ebd9c8] flex-shrink-0">{item.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes slideInRight {
+          from { transform: translateX(-100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+      `}</style>
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}
       <footer className="bg-[#150605] pt-20 pb-10">
