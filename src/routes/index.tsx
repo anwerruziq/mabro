@@ -259,15 +259,7 @@ function Index() {
           .to(step, { y: -150, opacity: 0, duration: 1, ease: "none" });
       });
 
-      // 6. Headline fade-in over canvas
-      gsap.fromTo(
-        "#hero-headline",
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
-          scrollTrigger: { trigger: heroRef.current, start: "top top", toggleActions: "play none none reverse" },
-        }
-      );
+      // Headline is now visible by default on the first frame and fades out via the timeline above
     },
     { dependencies: [framesReady] }
   );
@@ -391,12 +383,11 @@ function Index() {
 
           {/* Overlays removed for clearer frames */}
 
-          {/* Intro headline — fades in over the sequence */}
+          {/* Intro headline — fades out as you scroll down */}
           <div
             id="hero-headline"
             ref={textRef}
             className="relative z-10 flex h-full flex-col items-center justify-center px-6 pt-20 text-center will-change-transform"
-            style={{ opacity: 0 }}
           >
             <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold tracking-widest text-white/80 uppercase backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
@@ -405,7 +396,7 @@ function Index() {
 
             <h1 className="leading-tight text-white drop-shadow-lg" style={{ fontFamily: "'Qahwa', sans-serif" }}>
               <span className="block text-6xl font-light md:text-7xl lg:text-8xl opacity-90">
-                حيث كل
+                كل
               </span>
               <span className="block text-6xl font-bold md:text-7xl lg:text-8xl">
                 رشفة تحكي قصة.
