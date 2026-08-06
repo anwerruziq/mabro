@@ -44,13 +44,16 @@ function VideoLoader({ exiting }: { exiting: boolean }) {
   return (
     <div
       className={exiting ? "video-loader loader-exit" : "video-loader"}
-      style={{ position: "fixed", inset: 0, width: "100vw", height: "100dvh", zIndex: 9999, background: "#1a0e06", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}
+      style={{ position: "fixed", inset: 0, width: "100vw", height: "100dvh", zIndex: 9999, background: "#f9d0a2", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}
     >
       <video
         autoPlay muted loop playsInline src={LOADER_VIDEO_URL}
-        style={{ width: "100%", height: "100%", objectFit: "cover", maxWidth: "100vw", maxHeight: "100dvh" }}
+        className="loader-video"
+        style={{ height: "auto", borderRadius: "12px", display: "block" }}
       />
       <style>{`
+        .loader-video { width: min(360px, 90vw); }
+        @media (min-width: 768px) { .loader-video { width: min(720px, 90vw); } }
         .video-loader { animation: loaderFadeIn 0.3s ease both; }
         @keyframes loaderFadeIn { from { opacity: 0; } to { opacity: 1; } }
         .loader-exit { animation: loaderFadeOut 0.8s ease forwards !important; }
@@ -108,6 +111,30 @@ function Index() {
     imagesRef.current = [];
     let loaded = 0;
     const total = urls.length;
+    let done = false;
+
+    // ─── Shared finish: dismiss splash & mark ready ──────────────────
+    const finish = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(timeoutId);
+      const splash = document.getElementById("splash-loader");
+      if (splash) {
+        splash.style.opacity = "0";
+        splash.style.pointerEvents = "none";
+        setTimeout(() => {
+          splash.remove();
+          setFramesReady(true);
+        }, 800);
+      } else {
+        setFramesReady(true);
+      }
+    };
+
+    // ─── Hard 30-second timeout ───────────────────────────────────────
+    const timeoutId = setTimeout(() => {
+      finish();
+    }, 30_000);
 
     // Draw frame 0 immediately so canvas isn't blank
     const firstImg = new Image();
@@ -122,41 +149,21 @@ function Index() {
       img.onload = () => {
         loaded++;
         setLoadProgress(Math.round((loaded / total) * 100));
-        if (loaded === total) {
-          setTimeout(() => {
-            const splash = document.getElementById("splash-loader");
-            if (splash) {
-              splash.style.opacity = "0";
-              splash.style.pointerEvents = "none";
-              setTimeout(() => {
-                splash.remove();
-                setFramesReady(true);
-              }, 800);
-            } else {
-              setFramesReady(true);
-            }
-          }, 300);
-        }
+        if (loaded === total) setTimeout(finish, 300);
       };
       img.onerror = () => {
         loaded++;
-        if (loaded === total) {
-          const splash = document.getElementById("splash-loader");
-          if (splash) {
-            splash.style.opacity = "0";
-            splash.style.pointerEvents = "none";
-            setTimeout(() => {
-              splash.remove();
-              setFramesReady(true);
-            }, 800);
-          } else {
-            setFramesReady(true);
-          }
-        }
+        if (loaded === total) setTimeout(finish, 300);
       };
       imagesRef.current[i] = img;
     });
+
+    return () => {
+      done = true;
+      clearTimeout(timeoutId);
+    };
   }, [drawFrame]);
+
 
   // ─── Keep canvas sized to viewport ────────────────────────────────────
   useEffect(() => {

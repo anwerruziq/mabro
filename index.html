@@ -19,7 +19,7 @@
         position: fixed;
         inset: 0;
         z-index: 999999;
-        background: #1a0e06;
+        background: #f9d0a2;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -27,20 +27,48 @@
         transition: opacity 0.8s ease;
       }
       #splash-loader video {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        width: min(360px, 90vw);
+        height: auto;
+        border-radius: 12px;
+        display: block;
+      }
+      @media (min-width: 768px) {
+        #splash-loader video {
+          width: min(720px, 90vw);
+        }
       }
     </style>
   </head>
   <body>
     <!-- Splash loader shown instantly while React boots -->
     <div id="splash-loader">
-      <video autoplay muted loop playsinline src="/motion-graphics.mp4"></video>
+      <video id="splash-video" autoplay muted loop playsinline src="/motion-graphics.mp4"></video>
     </div>
     <div id="root"></div>
+    <script>
+      // Extract exact background color from first video frame
+      (function () {
+        var video = document.getElementById('splash-video');
+        var loader = document.getElementById('splash-loader');
+        function sampleColor() {
+          try {
+            var canvas = document.createElement('canvas');
+            canvas.width = 4;
+            canvas.height = 4;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, 4, 4);
+            var d = ctx.getImageData(0, 0, 1, 1).data;
+            var color = 'rgb(' + d[0] + ',' + d[1] + ',' + d[2] + ')';
+            loader.style.background = color;
+          } catch (e) {}
+        }
+        video.addEventListener('loadeddata', sampleColor);
+        video.addEventListener('canplay', sampleColor);
+        // Fallback: try after short delay
+        setTimeout(sampleColor, 300);
+        setTimeout(sampleColor, 800);
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
