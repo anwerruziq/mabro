@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import JSZip from "jszip";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -99,19 +100,12 @@ function Index() {
     ctx.filter = "none";
   }, []);
 
-  // ─── Preload all frames ────────────────────────────────────────────────
+  // ─── Preload all frames from ZIP ───────────────────────────────────────
   useEffect(() => {
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // On reduced-motion just first+last
-    let urls = FRAME_NAMES;
-    if (prefersReduced) {
-      urls = [FRAME_NAMES[0], FRAME_NAMES[FRAME_NAMES.length - 1]];
-    }
-
-    imagesRef.current = [];
-    let loaded = 0;
-    const total = urls.length;
     let done = false;
+    let objectUrls: string[] = [];
+    imagesRef.current = [];
 
     // ─── Shared finish: dismiss splash & mark ready ──────────────────
     const finish = () => {
@@ -136,31 +130,70 @@ function Index() {
       finish();
     }, 30_000);
 
-    // Draw frame 0 immediately so canvas isn't blank
-    const firstImg = new Image();
-    firstImg.src = urls[0];
-    firstImg.onload = () => drawFrame(0);
-    imagesRef.current[0] = firstImg;
+    const loadZipFrames = async () => {
+      try {
+        const response = await fetch("/frames.zip");
+        if (!response.ok) throw new Error("Failed to load frames.zip");
+        const arrayBuffer = await response.arrayBuffer();
+        const zip = await JSZip.loadAsync(arrayBuffer);
 
-    urls.forEach((src, i) => {
-      if (i === 0) { loaded++; setLoadProgress(Math.round((loaded / total) * 100)); return; }
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
-        loaded++;
-        setLoadProgress(Math.round((loaded / total) * 100));
-        if (loaded === total) setTimeout(finish, 300);
-      };
-      img.onerror = () => {
-        loaded++;
-        if (loaded === total) setTimeout(finish, 300);
-      };
-      imagesRef.current[i] = img;
-    });
+        const fileNames = Object.keys(zip.files)
+          .filter((name) => name.endsWith(".webp") || name.endsWith(".jpg"))
+          .sort();
+
+        let urlsToLoad = fileNames;
+        if (prefersReduced && fileNames.length > 0) {
+          urlsToLoad = [fileNames[0], fileNames[fileNames.length - 1]];
+        }
+
+        const total = urlsToLoad.length;
+        let loaded = 0;
+
+        for (let i = 0; i < fileNames.length; i++) {
+          if (done) break;
+          const fileName = fileNames[i];
+          if (!urlsToLoad.includes(fileName)) continue;
+
+          const file = zip.files[fileName];
+          const blob = await file.async("blob");
+          const objectUrl = URL.createObjectURL(blob);
+          objectUrls.push(objectUrl);
+
+          const img = new Image();
+          await new Promise<void>((resolve) => {
+            img.onload = () => {
+              loaded++;
+              setLoadProgress(Math.round((loaded / total) * 100));
+              if (i === 0) drawFrame(0);
+              resolve();
+            };
+            img.onerror = () => {
+              loaded++;
+              resolve();
+            };
+            img.src = objectUrl;
+          });
+
+          // Store at the correct index for GSAP scrolling
+          imagesRef.current[i] = img;
+
+          if (loaded === total) {
+            // Wait slightly for DOM
+            setTimeout(finish, 300);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load or parse zip:", err);
+        finish();
+      }
+    };
+
+    loadZipFrames();
 
     return () => {
       done = true;
       clearTimeout(timeoutId);
+      objectUrls.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [drawFrame]);
 
